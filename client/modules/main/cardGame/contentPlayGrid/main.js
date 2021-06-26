@@ -7,12 +7,12 @@ const contentPlayGrid = {
   init: {
     renderHtml: async ()=>{
       append('body', `
-            <main class='abs center'>
-                  <padding-main class='abs center' style='width: 95%; height: 95%;'>
-                  </padding-main>
-            </main>
+            <content-card-grid class='abs center'>
+                  <padding-content-card-grid class='abs center' style='width: 95%; height: 95%;'>
+                  </padding-content-card-grid>
+            </content-card-grid>
       `);
-      s('main').style.border = '2px solid white';
+      s('content-card-grid').style.border = '2px solid white';
       let altura = 3;
       let anchura = 4;
       let top = 0;
@@ -45,7 +45,7 @@ const contentPlayGrid = {
             color = 'red';
             zone = 'hand-red';
           }
-          append('padding-main', `
+          append('padding-content-card-grid', `
               <div class='abs cell cell-`+x+`-`+y+`'
               zone='`+zone+`'
               cell-x='`+x+`'
@@ -92,11 +92,11 @@ const contentPlayGrid = {
   service: {},
   render: async () =>{
     if(data.var.h>data.var.w){
-      s('main').style.height = data.var.w*0.95+'px';
-      s('main').style.width = data.var.w*0.95+'px';
+      s('content-card-grid').style.height = data.var.w*0.95+'px';
+      s('content-card-grid').style.width = data.var.w*0.95+'px';
     }else{
-      s('main').style.height = data.var.h*0.95+'px';
-      s('main').style.width = data.var.h*0.95+'px';
+      s('content-card-grid').style.height = data.var.h*0.95+'px';
+      s('content-card-grid').style.width = data.var.h*0.95+'px';
     }
   }
 };
