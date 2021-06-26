@@ -19,13 +19,15 @@
   const global = {
     init: async ()=>{
       notifiValidator.loader();
-      contentPlayGrid.loader();
-      cards.loader();
+      oldGallery.loader();
+      // contentPlayGrid.loader();
+      // cards.loader();
     },
     render: async ()=>{
       notifiValidator.render();
-      contentPlayGrid.render();
-      cards.render();
+      oldGallery.render();
+      // contentPlayGrid.render();
+      // cards.render();
     }
   };
 
@@ -64,9 +66,35 @@
             }
             body {
               cursor: default;
+              font-family: 'retro-font';
+              font-size: 10px;
+              overflow-x: hidden;
+            }
+            .fas, .fa {
+              font-size: 18px;
+            }
+            /* width */
+            ::-webkit-scrollbar {
+              width: 10px;
+            }
+
+            /* Track */
+            ::-webkit-scrollbar-track {
+              background: #f1f1f1;
+            }
+
+            /* Handle */
+            ::-webkit-scrollbar-thumb {
+              background: #888;
+            }
+
+            /* Handle on hover */
+            ::-webkit-scrollbar-thumb:hover {
+              background: #555;
             }
         </style>
       `);
+      // `+spr('test <br>', 1000)+`
       notclick('body', 1, false);
 	    notclick('body', 2, false);
       global.init();
