@@ -28,6 +28,7 @@
     "nodemon": "latest",
     "var_dump": "latest",
     "colors": "latest",
-    "express-session": "latest"
+    "express-session": "latest",
+    "crypto-js": "latest"
   }
 }
