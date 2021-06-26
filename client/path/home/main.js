@@ -18,10 +18,14 @@
 
   const global = {
     init: async ()=>{
+      notifiValidator.loader();
       contentPlayGrid.loader();
+      cards.loader();
     },
     render: async ()=>{
+      notifiValidator.render();
       contentPlayGrid.render();
+      cards.render();
     }
   };
 
@@ -58,8 +62,13 @@
             h1, h2 {
               display: none;
             }
+            body {
+              cursor: default;
+            }
         </style>
       `);
+      notclick('body', 1, false);
+	    notclick('body', 2, false);
       global.init();
       main.render();
     },

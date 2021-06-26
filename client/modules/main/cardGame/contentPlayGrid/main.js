@@ -63,7 +63,7 @@ const contentPlayGrid = {
                           margin: 2.5%;
                           border: 2px solid `+color+`;
                     '>
-                          zone: <br> `+zone+`
+                          <!-- zone: <br> `+zone+` -->
                   </div>
               </div>
           `);

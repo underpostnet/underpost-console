@@ -66,6 +66,8 @@ for(let i=0; i<l(data.path);i++){
 
 			<meta name='viewport' content='width=device-width, user-scalable=no' />
 
+			<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
 			`+fonts+`
 
 			<style>

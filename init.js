@@ -7,6 +7,10 @@
 //
 //------------------------------------------------------------------------------
 
+// http://localhost:91/
+// https://www.w3schools.com/icons/fontawesome5_intro.asp
+// https://fontawesome.com/v5.15/icons/search
+
 let fs = require('fs');
 var charset = 'utf8';
 var data = JSON.parse(fs.readFileSync('C:/dd/global_data/json/underpostv3/underpost.json', charset));
