@@ -7,10 +7,15 @@ const contentPlayGrid = {
   init: {
     renderHtml: async ()=>{
       append('body', `
-            <content-card-grid class='abs center'>
-                  <padding-content-card-grid class='abs center' style='width: 95%; height: 95%;'>
-                  </padding-content-card-grid>
-            </content-card-grid>
+
+            <contentPlayGrid class='in'>
+                <div class='in space-content-card-grid'></div>
+                <content-card-grid class='abs center'>
+                      <padding-content-card-grid class='abs center' style='width: 95%; height: 95%;'>
+                      </padding-content-card-grid>
+                </content-card-grid>
+            <contentPlayGrid/>
+
       `);
       s('content-card-grid').style.border = '2px solid white';
       let altura = 3;
@@ -91,6 +96,7 @@ const contentPlayGrid = {
   },
   service: {},
   render: async () =>{
+    s('.space-content-card-grid').style.height = data.var.h+'px';
     if(data.var.h>data.var.w){
       s('content-card-grid').style.height = data.var.w*0.95+'px';
       s('content-card-grid').style.width = data.var.w*0.95+'px';

@@ -19,15 +19,15 @@
   const global = {
     init: async ()=>{
       notifiValidator.loader();
-      oldGallery.loader();
-      // contentPlayGrid.loader();
-      // cards.loader();
+      // oldGallery.loader();
+      contentPlayGrid.loader();
+      cards.loader();
     },
     render: async ()=>{
       notifiValidator.render();
-      oldGallery.render();
-      // contentPlayGrid.render();
-      // cards.render();
+      // oldGallery.render();
+      contentPlayGrid.render();
+      cards.render();
     }
   };
 

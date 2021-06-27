@@ -8,12 +8,12 @@ const notifiValidator = {
     init: {
       renderHtml: async ()=>{
             append('body', `
-                <div class='fix notifiValidator'>
+                <notifiValidator class='fix' style='display: none;'>
                       <div class='abs notifiValidator-c1'>
                       </div>
                       <div class='abs notifiValidator-c2'>
                       </div>
-                </div>
+                </notifiValidator>
             `);
       },
       renderCss: async ()=>{},
@@ -22,7 +22,7 @@ const notifiValidator = {
     service: {
       display: (state, msg, time)=>{
         if(!state){
-          s('.notifiValidator').style.background = 'red';
+          s('notifiValidator').style.background = 'red';
           htmls('.notifiValidator-c1', `
                   <div class='abs center'>
                         <i class='fa fa-times'></i>
@@ -33,12 +33,12 @@ const notifiValidator = {
                         `+msg+`
                   </div>
           `);
-          fadeIn(s('.notifiValidator'));
+          fadeIn(s('notifiValidator'));
           setTimeout(()=>{
-            fadeOut(s('.notifiValidator'));
+            fadeOut(s('notifiValidator'));
           }, time);
         }else{
-          s('.notifiValidator').style.background = 'green';
+          s('notifiValidator').style.background = 'green';
           htmls('.notifiValidator-c1', `
                   <div class='abs center'>
                         <i class='fa fa-check'></i>
@@ -49,9 +49,9 @@ const notifiValidator = {
                         `+msg+`
                   </div>
           `);
-          fadeIn(s('.notifiValidator'));
+          fadeIn(s('notifiValidator'));
           setTimeout(()=>{
-            fadeOut(s('.notifiValidator'));
+            fadeOut(s('notifiValidator'));
           }, time);
         }
       }

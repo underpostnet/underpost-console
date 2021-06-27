@@ -57,7 +57,7 @@ const cards = {
 
       append('body', `
 
-            <div class='fix modal-info-attack'>
+            <div class='fix modal-info-attack' style='display: none;'>
                     <div class='abs modal-info-attack-c1'>
 
                           <div class='abs center modal-info-ini-attack'>
@@ -167,6 +167,7 @@ const cards = {
             if(iniAttack==null&&finAttack==null){
               iniAttack=idEvent;
               htmls('.modal-info-ini-attack',cards.service.renderCardBody(idEvent, card));
+              fadeIn(s('.modal-info-attack'));
             }
 
             else if(iniAttack!=null&&finAttack==null){
@@ -176,6 +177,7 @@ const cards = {
               }else{
                 iniAttack=null;
                 htmls('.modal-info-ini-attack','');
+                fadeOut(s('.modal-info-attack'));
               }
             }
 
@@ -184,6 +186,7 @@ const cards = {
               iniAttack=null;
               htmls('.modal-info-fin-attack','');
               htmls('.modal-info-ini-attack','');
+              fadeOut(s('.modal-info-attack'));
             }
 
           };
@@ -210,7 +213,7 @@ const cards = {
           notifiValidator.service.display(true, 'success attack', 1000);
 
         }else{
-          
+
           notifiValidator.service.display(false, 'not valid state attack', 1000);
 
         }
