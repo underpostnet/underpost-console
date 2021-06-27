@@ -37,7 +37,7 @@ export class Block {
     	while(!this.hash.startsWith(this.blockChain.difficulty)) {
     		this.block.nonce++;
     		this.hash = this.calculateHash();
-        // console.log(this.block.hash);
+        // console.log(this.hash);
     	}
 
       console.log(this);

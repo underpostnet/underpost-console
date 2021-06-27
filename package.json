@@ -29,6 +29,7 @@
     "var_dump": "latest",
     "colors": "latest",
     "express-session": "latest",
-    "crypto-js": "latest"
+    "crypto-js": "latest",
+    "file-get-contents": "latest"
   }
 }
