@@ -7,7 +7,7 @@
 // const  = require('crypto-js/sha256');
 
 import { BlockChain } from "../class/blockChain.js";
-import { RestService } from "../class/RestService.js";
+import { RestService } from "../../rest/class/RestService.js";
 import fs from "fs";
 
 var KOYN = new BlockChain();
