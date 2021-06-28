@@ -7,19 +7,24 @@
 // const  = require('crypto-js/sha256');
 
 import { BlockChain } from "../class/blockChain.js";
-import { RestService } from "../../rest/class/RestService.js";
-import { Util } from "../../util/class/Util.js";
+import { RestService } from "../../../../../src/rest/class/RestService.js";
+import { Util } from "../../../../../src/util/class/Util.js";
 import fs from "fs";
 
 var KOYN = new BlockChain();
 
 const pathData = 'https://www.cyberiaonline.com/koyn';
 
+
+/* crear sistema de sucesión de requests */
+
+/* bases de datos de aplicaciones virtuales */
+
 await new RestService().getContent(pathData ,
   (data)=>{
     console.log('restService success');
     KOYN.addBlock({
-      data: data,
+      data: {cyberiaonline: data, underPostCardGame: {}},
       dataTransaction: {content: "test"},
       rewardAddress: "XXXXXXXXXXXXXXX"
     });
@@ -34,7 +39,7 @@ await new RestService().getContent(pathData ,
   (data)=>{
     console.log('restService success');
     KOYN.addBlock({
-      data: data,
+      data: {cyberiaonline: data, underPostCardGame: {}},
       dataTransaction: {content: "test"},
       rewardAddress: "XXXXXXXXXXXXXXX"
     });
