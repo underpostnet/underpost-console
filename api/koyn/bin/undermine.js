@@ -8,6 +8,7 @@
 
 import { BlockChain } from "../class/blockChain.js";
 import { RestService } from "../../rest/class/RestService.js";
+import { Util } from "../../util/class/Util.js";
 import fs from "fs";
 
 var KOYN = new BlockChain();
@@ -50,6 +51,6 @@ console.log(KOYN.checkValid());
 /* babelisar y usar json log en vez de null, 4 .. */
 fs.writeFileSync(
   './blockChain.json',
-  JSON.stringify(KOYN.chain, null, 4),
+  new Util().jsonSave(KOYN.chain),
   'utf-8'
 );
