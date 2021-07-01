@@ -12,50 +12,82 @@ import { Util } from "../../../../../src/util/class/Util.js";
 import fs from "fs";
 
 var KOYN = new BlockChain();
+var pathData;
 
-const pathData = 'https://www.cyberiaonline.com/koyn';
+var storage = {};
+async function addBlock(storage, resolve){
+  KOYN.addBlock({
+    data: storage,
+    dataTransaction: {content: "test"},
+    rewardAddress: "XXXXXXXXXXXXXXX"
+  });
+  storage = {};
+  resolve();
+};
+
+function generateBlock() {
+  return new Promise(resolve => {
+
+    // pathData = 'http://localhost:3001/koyn';
+    pathData = 'https://www.cyberiaonline.com/koyn';
+    new RestService().getContent(pathData , storage,
+      (data, storage)=>{
+        console.log('restService success -> '+pathData);
+        storage.cyberiaonline = data;
+
+              // pathData = 'http://localhost:3001/cards';
+              pathData = 'https://www.cyberiaonline.com/cards';
+              new RestService().getContent(pathData , storage,
+                (data, storage)=>{
+                  console.log('restService success -> '+pathData);
+                  storage.underPostCardGame = data;
+
+                            addBlock(storage, resolve);
+
+                },
+                (error)=>{
+                  console.log('restService error -> '+pathData);
+                  console.log(error);
+                }
+              );
+
+      },
+      (error)=>{
+        console.log('restService error -> '+pathData);
+        console.log(error);
+      }
+    );
 
 
-/* crear sistema de sucesión de requests */
+  });
+}
 
-/* bases de datos de aplicaciones virtuales */
+async function mainProcess() {
+  // https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Statements/async_function
+  await generateBlock();
+  await generateBlock();
+  await fs.writeFileSync(
+    './blockChain.json',
+    new Util().jsonSave(KOYN.chain),
+    'utf-8'
+  );
+  console.log('valid ->');
+  console.log(KOYN.checkValid());
+}
 
-await new RestService().getContent(pathData ,
-  (data)=>{
-    console.log('restService success');
-    KOYN.addBlock({
-      data: {cyberiaonline: data, underPostCardGame: {}},
-      dataTransaction: {content: "test"},
-      rewardAddress: "XXXXXXXXXXXXXXX"
-    });
-  },
-  (error)=>{
-    console.log('restService error');
-    console.log(error);
-  }
-);
+mainProcess();
 
-await new RestService().getContent(pathData ,
-  (data)=>{
-    console.log('restService success');
-    KOYN.addBlock({
-      data: {cyberiaonline: data, underPostCardGame: {}},
-      dataTransaction: {content: "test"},
-      rewardAddress: "XXXXXXXXXXXXXXX"
-    });
-  },
-  (error)=>{
-    console.log('restService error');
-    console.log(error);
-  }
-);
 
-console.log('valid ->');
-console.log(KOYN.checkValid());
 
-/* babelisar y usar json log en vez de null, 4 .. */
-fs.writeFileSync(
-  './blockChain.json',
-  new Util().jsonSave(KOYN.chain),
-  'utf-8'
-);
+
+
+
+
+
+
+
+
+
+
+
+// end
