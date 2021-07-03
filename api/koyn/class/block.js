@@ -1,4 +1,8 @@
 import SHA256 from "crypto-js/sha256.js";
+import { RestService } from "../../../../../src/rest/class/RestService.js";
+import colors from "colors/safe.js";
+import { Util } from "../../../../../src/util/class/Util.js";
+
 
 export class Block {
 
@@ -7,12 +11,7 @@ export class Block {
     blockChain = {};
     hash = "";
 
-    constructor(node) {
-        // node set
-        this.node.data  = node.data;
-        this.node.rewardAddress  = node.rewardAddress;
-        this.node.dataTransaction  = node.dataTransaction;
-        // block set
+    constructor() {
         this.block.date = (+ new Date());
         this.block.nonce = 0;
     }
@@ -27,12 +26,28 @@ export class Block {
       ).toString();
     }
 
-    mineBlock(blockChainConfig) {
+    async mineBlock(obj) {
 
-      this.blockChain.index  = blockChainConfig.index;
-      this.blockChain.previousHash  = blockChainConfig.previousHash;
-      this.blockChain.reward  = blockChainConfig.reward;
-      this.blockChain.difficulty = blockChainConfig.difficulty;
+      this.node.dataApp = await this.setData(
+        obj.paths.filter((el)=>{
+          return (el.type=='App')
+        })
+      );
+
+      this.node.dataTransaction = await this.setData(
+        obj.paths.filter((el)=>{
+          return (el.type=='Transaction')
+        })
+      );
+
+      this.node.rewardAddress = obj.rewardAddress;
+
+      this.blockChain.index  = obj.config.index;
+      this.blockChain.previousHash  = obj.config.previousHash;
+      this.blockChain.reward  = obj.config.reward;
+      this.blockChain.difficulty = obj.config.difficulty;
+
+      console.log(colors.magenta('Mining Block ...'));
 
     	while(!this.hash.startsWith(this.blockChain.difficulty)) {
     		this.block.nonce++;
@@ -43,4 +58,30 @@ export class Block {
       console.log(this);
 
     }
+
+    async setData(paths){
+      let storage = [];
+      for(let path of paths){
+        await new Promise(resolve => {
+          new RestService().getContent(path.url , storage,
+            (data, storage)=>{
+              console.log(colors.blue('restService success -> '+path.url));
+              storage.push({
+                type: path.type,
+                url: path.url,
+                data: data
+              });
+              resolve();
+            },
+            (error)=>{
+              console.log(colors.red('restService error -> '+path.url));
+              console.log(error);
+            }
+          );
+        });
+      }
+      return storage;
+    }
+
+
 }
