@@ -62,22 +62,10 @@ export class Block {
     async setData(paths){
       let storage = [];
       for(let path of paths){
-        await new Promise(resolve => {
-          new RestService().getContent(path.url , storage,
-            (data, storage)=>{
-              console.log(colors.blue('restService success -> '+path.url));
-              storage.push({
-                type: path.type,
-                url: path.url,
-                data: data
-              });
-              resolve();
-            },
-            (error)=>{
-              console.log(colors.red('restService error -> '+path.url));
-              console.log(error);
-            }
-          );
+        storage.push({
+          type: path.type,
+          url: path.url,
+          data: await new RestService().getJSON(path.url)
         });
       }
       return storage;
