@@ -6,8 +6,59 @@ import colors from "colors/safe.js";
 
 export class BlockChain {
 
-	constructor() {
+	constructor(rewardConfig) {
+
 		this.chain = [];
+
+		this.rewardConfig = {
+			era: [],
+			reward: [],
+			blocks: [],
+			rewardPerBlock: [],
+			intervalChangeEraBlock: rewardConfig.intervalChangeEraBlock,
+			totalEra: rewardConfig.totalEra,
+			sumBlocks: 0,
+			sumReward: 0
+		};
+		this.setRewardConfig();
+
+	}
+
+	setRewardConfig(){
+
+		for(let i of new Util().range(0, this.rewardConfig.totalEra)){
+
+			this.rewardConfig.era.push(i);
+
+			this.rewardConfig.reward.push(
+			(this.rewardConfig.intervalChangeEraBlock*
+				((50*(10**8))/(2**i)))/(10**8)
+			);
+
+			this.rewardConfig.rewardPerBlock.push(
+				this.rewardConfig.reward[
+					(new Util().l(this.rewardConfig.reward)-1)
+				]
+				/	this.rewardConfig.intervalChangeEraBlock
+			);
+
+			this.rewardConfig.sumBlocks += this.rewardConfig.intervalChangeEraBlock;
+			this.rewardConfig.sumReward += this.rewardConfig.reward[
+				(new Util().l(this.rewardConfig.reward)-1)
+			];
+			this.rewardConfig.blocks.push(this.rewardConfig.sumBlocks);
+
+		}
+
+		console.log(colors.yellow('rewardConfig BlockChain ->'));
+		console.log(this.rewardConfig);
+
+		fs.writeFileSync(
+	    '../data/rewardConfig.json',
+	    new Util().jsonSave(this.rewardConfig),
+	    'utf-8'
+	  );
+
 	}
 
   currentConfig(){
@@ -79,7 +130,7 @@ export class BlockChain {
 
 	generateJSON(){
 		fs.writeFileSync(
-	    './blockChain.json',
+	    '../data/blockChain.json',
 	    new Util().jsonSave(this.chain),
 	    'utf-8'
 	  );

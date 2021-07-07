@@ -1,4 +1,4 @@
 /node_modules
 /package-lock.json
 /client/modules/main/private
-/api/koyn/bin/blockChain.json
+/api/koyn/data

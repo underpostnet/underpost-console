@@ -7,7 +7,10 @@
 
 import { BlockChain } from "../class/blockChain.js";
 
-new BlockChain().mainProcess({
+new BlockChain({
+  intervalChangeEraBlock: 210000,
+  totalEra: 32
+}).mainProcess({
   rewardAddress: "APOJA7S8ASNA9S8WE",
   totalBlocks: 3,
   paths: [
