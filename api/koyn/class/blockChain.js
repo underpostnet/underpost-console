@@ -1,22 +1,25 @@
 import { Block } from "./block.js";
 import { Util } from "../../../../../src/util/class/Util.js";
+import SHA256 from "crypto-js/sha256.js";
 import fs from "fs";
 import colors from "colors/safe.js";
 
 
 export class BlockChain {
 
-	constructor(rewardConfig) {
+	constructor(obj) {
 
 		this.chain = [];
+
+		this.dataGenesisHash = obj.dataGenesisHash;
 
 		this.rewardConfig = {
 			era: [],
 			reward: [],
 			blocks: [],
 			rewardPerBlock: [],
-			intervalChangeEraBlock: rewardConfig.intervalChangeEraBlock,
-			totalEra: rewardConfig.totalEra,
+			intervalChangeEraBlock: obj.rewardConfig.intervalChangeEraBlock,
+			totalEra: obj.rewardConfig.totalEra,
 			sumBlocks: 0,
 			sumReward: 0
 		};
@@ -66,7 +69,9 @@ export class BlockChain {
       case 0:
         return {
           index: 0,
-          previousHash: "0",
+          previousHash: SHA256(
+						new Util().JSONstr(this.dataGenesisHash)
+					).toString(),
           reward: this.calculateReward(),
           difficulty: this.calculateDifficulty()
         }
@@ -85,8 +90,26 @@ export class BlockChain {
 	}
 
   calculateReward(){
-    /* en genesis es el supply y el transfiere agregando el primer contable */
-    return 0;
+		switch (new Util().l(this.chain)) {
+			case 0:
+				return this.rewardConfig.rewardPerBlock[0];
+			default:
+				let indexBlock = this.latestBlock().blockChain.index+1;
+				console.log('index block test ->');
+				console.log(indexBlock);
+				for(let i of new Util().range(0, this.rewardConfig.totalEra)){
+					switch (i) {
+						case 0:
+							if((0<indexBlock)&&(indexBlock<this.rewardConfig.blocks[0])){
+								return this.rewardConfig.rewardPerBlock[0]
+							}
+						default:
+							if((this.rewardConfig.blocks[i-1]<=indexBlock)&&(indexBlock<this.rewardConfig.blocks[i])){
+								return this.rewardConfig.rewardPerBlock[i];
+							}
+					}
+				}
+		}
   }
 
   calculateDifficulty(){
@@ -97,6 +120,7 @@ export class BlockChain {
     let block = new Block();
 		await block.mineBlock(obj);
     this.chain.push(block);
+		this.calculateCurrentRewardDelivered();
 		console.log(colors.yellow('BlockChain Validator Status ->'));
 		console.log(colors.yellow(this.checkValid()));
 	}
@@ -126,6 +150,14 @@ export class BlockChain {
 			});
 		}
 		this.generateJSON();
+	}
+
+	calculateCurrentRewardDelivered(){
+		let currentReward = 0;
+		for(let block of this.chain){
+			currentReward += block.blockChain.reward;
+		}
+		console.log(colors.cyan('Current Reward Delivered -> '+currentReward));
 	}
 
 	generateJSON(){

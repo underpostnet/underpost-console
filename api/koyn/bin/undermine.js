@@ -8,11 +8,16 @@
 import { BlockChain } from "../class/blockChain.js";
 
 new BlockChain({
-  intervalChangeEraBlock: 210000,
-  totalEra: 32
+  rewardConfig: {
+    intervalChangeEraBlock: 1, /* 1 - 210000 */
+    totalEra: 32
+  },
+  dataGenesisHash: {
+    content: "test"
+  }
 }).mainProcess({
   rewardAddress: "APOJA7S8ASNA9S8WE",
-  totalBlocks: 3,
+  totalBlocks: 34,
   paths: [
     {
       url: 'http://localhost:3001/koyn',
