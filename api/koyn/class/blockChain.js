@@ -11,7 +11,7 @@ export class BlockChain {
 
 		this.chain = [];
 
-		this.dataGenesisHash = obj.dataGenesisHash;
+		this.difficultyConfig = obj.difficultyConfig;
 
 		this.rewardConfig = {
 			era: [],
@@ -64,26 +64,33 @@ export class BlockChain {
 
 	}
 
-  currentConfig(){
+  currentBlockConfig(){
     switch (new Util().l(this.chain)) {
       case 0:
         return {
           index: 0,
           previousHash: SHA256(
-						new Util().JSONstr(this.dataGenesisHash)
+						new Util().JSONstr(this.genesisBlockChainConfig())
 					).toString(),
           reward: this.calculateReward(),
           difficulty: this.calculateDifficulty()
         }
       default:
         return {
-          index: this.latestBlock().blockChain.index + 1,
+          index: this.latestBlock().block.index + 1,
           previousHash: this.latestBlock().hash,
           reward: this.calculateReward(),
           difficulty: this.calculateDifficulty()
         }
     }
   }
+
+	genesisBlockChainConfig(){
+		return {
+			difficultyConfig: this.difficultyConfig,
+			rewardConfig: this.rewardConfig
+		}
+	}
 
 	latestBlock() {
 		return this.chain[this.chain.length - 1];
@@ -94,7 +101,7 @@ export class BlockChain {
 			case 0:
 				return this.rewardConfig.rewardPerBlock[0];
 			default:
-				let indexBlock = this.latestBlock().blockChain.index+1;
+				let indexBlock = this.latestBlock().block.index+1;
 				console.log('index block test ->');
 				console.log(indexBlock);
 				for(let i of new Util().range(0, this.rewardConfig.totalEra)){
@@ -113,8 +120,73 @@ export class BlockChain {
   }
 
   calculateDifficulty(){
-    return "000";
-  }
+
+		function diffToTarget(diff) {
+			var buf = Buffer.alloc(32).fill(0);
+			function numberTo64BitBigInt(x) {
+			  const lo = x | 0;
+			  const rawHi = (x / 4294967296.0) | 0; // 2^32
+			  const hi = (x < 0 && lo != 0) ? (rawHi - 1) | 0 : rawHi;
+			  return (BigInt(hi) << 32n) | BigInt(lo >>> 0);
+			}
+			if(!isFinite(diff) || diff <= 0) {
+				buf.fill(0xff);
+				return buf.toString('hex');
+			}
+			var k = 6;
+			for (; k > 0 && diff > 1.0; k--) {
+				diff /= 4294967296.0;
+			}
+			var m = BigInt(numberTo64BitBigInt((4.294901760e+9 / diff)))
+			buf.writeUInt32LE(Number(0xffffffffn & m) >>> 0, k << 2);
+			buf.writeUInt32LE(Number(m >> 32n) >>> 0, 4 + (k << 2));
+			return buf.toString('hex');
+		}
+
+		function getZerosHash(hash){
+			let charList = [];
+			for(let char of hash){
+				charList.push(char);
+			}
+			charList = charList.reverse();
+			let target = "";
+			for(let char of charList){
+				if(char=="0"){
+					target+=char;
+				}else{
+					break;
+				}
+			}
+			return target;
+		}
+
+		function recalculateDiff(old_diff, new_diff){
+			return old_diff * ( old_diff / new_diff )
+		}
+
+		function getDiff(time_seconds, hash_rate_seconds){
+		  // hashes -> nonce
+		  return  ((time_seconds*hash_rate_seconds)/Math.pow(2, 32))
+		}
+
+		switch (new Util().l(this.chain)) {
+			case 0:
+				return this.difficultyConfig.initZerosHash;
+			default:
+
+				let lastDate = this.latestBlock().block.date;
+				let currentDate = (+ new Date());
+				let intervalSecondsTime = ((currentDate-lastDate)/1000);
+
+
+
+
+
+				return "000"
+
+
+  	}
+	}
 
 	async addBlock(obj) {
     let block = new Block();
@@ -134,7 +206,7 @@ export class BlockChain {
 				return false;
 			}
 
-			if (currentBlock.blockChain.previousHash !== previousBlock.hash) {
+			if (currentBlock.block.previousHash !== previousBlock.hash) {
 				return false;
 			}
 		}
@@ -143,11 +215,21 @@ export class BlockChain {
 
 	async mainProcess(obj){
 		for(let i=0; i<obj.totalBlocks; i++){
-			await this.addBlock({
-				rewardAddress: obj.rewardAddress,
-				paths: obj.paths,
-				config: this.currentConfig()
-			});
+			switch (new Util().l(this.chain)) {
+				case 0:
+					await this.addBlock({
+						rewardAddress: obj.rewardAddress,
+						paths: obj.paths,
+						blockConfig: this.currentBlockConfig(),
+						dataGenesis: this.genesisBlockChainConfig()
+					})
+				default:
+					await this.addBlock({
+						rewardAddress: obj.rewardAddress,
+						paths: obj.paths,
+						blockConfig: this.currentBlockConfig()
+					})
+			}
 		}
 		this.generateJSON();
 	}
@@ -155,7 +237,7 @@ export class BlockChain {
 	calculateCurrentRewardDelivered(){
 		let currentReward = 0;
 		for(let block of this.chain){
-			currentReward += block.blockChain.reward;
+			currentReward += block.block.reward;
 		}
 		console.log(colors.cyan('Current Reward Delivered -> '+currentReward));
 	}

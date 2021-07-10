@@ -12,8 +12,8 @@ new BlockChain({
     intervalChangeEraBlock: 1, /* 1 - 210000 */
     totalEra: 32
   },
-  dataGenesisHash: {
-    content: "test"
+  difficultyConfig: {
+    initZerosHash: "000"
   }
 }).mainProcess({
   rewardAddress: "APOJA7S8ASNA9S8WE",

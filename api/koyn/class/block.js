@@ -8,7 +8,6 @@ export class Block {
 
     node = {};
     block = {};
-    blockChain = {};
     hash = "";
 
     constructor() {
@@ -17,39 +16,53 @@ export class Block {
     }
 
     calculateHash() {
-      return SHA256(
-        JSON.stringify({
-          node: this.node,
-          blockChain: this.blockChain,
-          block: this.block
-        })
-      ).toString();
+      switch (this.block.index) {
+        case 0:
+          return SHA256(
+            JSON.stringify({
+              node: this.node,
+              block: this.block,
+              dataGenesis: this.dataGenesis
+            })
+          ).toString();
+        default:
+          return SHA256(
+            JSON.stringify({
+              node: this.node,
+              block: this.block
+            })
+          ).toString();
+      }
     }
 
     async mineBlock(obj) {
 
-      this.node.dataApp = await this.setData(
-        obj.paths.filter((el)=>{
-          return (el.type=='App')
-        })
+      this.node = Object.assign(
+        {
+          dataApp: await this.setData(
+            obj.paths.filter((el)=>{
+              return (el.type=='App')
+            })
+          )
+        },
+        {
+          dataTransaction: await this.setData(
+            obj.paths.filter((el)=>{
+              return (el.type=='Transaction')
+            })
+          )
+        },
+        {
+          rewardAddress: obj.rewardAddress
+        }
       );
 
-      this.node.dataTransaction = await this.setData(
-        obj.paths.filter((el)=>{
-          return (el.type=='Transaction')
-        })
-      );
-
-      this.node.rewardAddress = obj.rewardAddress;
-
-      this.blockChain.index  = obj.config.index;
-      this.blockChain.previousHash  = obj.config.previousHash;
-      this.blockChain.reward  = obj.config.reward;
-      this.blockChain.difficulty = obj.config.difficulty;
+      this.block = Object.assign(this.block, obj.blockConfig);
+      obj.blockConfig.index == 0 ? this.dataGenesis = obj.dataGenesis: null;
 
       console.log(colors.magenta('Mining Block ...'));
 
-    	while(!this.hash.startsWith(this.blockChain.difficulty)) {
+    	while(!this.hash.startsWith(this.block.difficulty)) {
     		this.block.nonce++;
     		this.hash = this.calculateHash();
         // console.log(this.hash);
