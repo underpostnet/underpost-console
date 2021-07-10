@@ -19,7 +19,7 @@ export class Block {
       switch (this.block.index) {
         case 0:
           return SHA256(
-            JSON.stringify({
+            new Util().JSONstr({
               node: this.node,
               block: this.block,
               dataGenesis: this.dataGenesis
@@ -27,7 +27,7 @@ export class Block {
           ).toString();
         default:
           return SHA256(
-            JSON.stringify({
+            new Util().JSONstr({
               node: this.node,
               block: this.block
             })
@@ -62,7 +62,7 @@ export class Block {
 
       console.log(colors.magenta('Mining Block ...'));
 
-    	while(!this.hash.startsWith(this.block.difficulty)) {
+    	while(!this.hash.startsWith(this.block.difficulty.zeros)) {
     		this.block.nonce++;
     		this.hash = this.calculateHash();
         // console.log(this.hash);

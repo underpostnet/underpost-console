@@ -13,11 +13,12 @@ new BlockChain({
     totalEra: 32
   },
   difficultyConfig: {
-    initZerosHash: "000"
+    initTimeSeconds: 600, /* 600sec -> 10 min */
+    initHashRateSeconds: 6500 /* 6500 hash/sec */
   }
 }).mainProcess({
   rewardAddress: "APOJA7S8ASNA9S8WE",
-  totalBlocks: 34,
+  totalBlocks: 33,
   paths: [
     {
       url: 'http://localhost:3001/koyn',

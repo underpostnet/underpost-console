@@ -65,6 +65,7 @@ export class BlockChain {
 	}
 
   currentBlockConfig(){
+		let diff = this.calculateDifficulty();
     switch (new Util().l(this.chain)) {
       case 0:
         return {
@@ -73,14 +74,22 @@ export class BlockChain {
 						new Util().JSONstr(this.genesisBlockChainConfig())
 					).toString(),
           reward: this.calculateReward(),
-          difficulty: this.calculateDifficulty()
+          difficulty: {
+						zeros: diff.zeros,
+						targetHash: diff.target,
+						difficulty: diff.difficulty
+					}
         }
       default:
         return {
           index: this.latestBlock().block.index + 1,
           previousHash: this.latestBlock().hash,
           reward: this.calculateReward(),
-          difficulty: this.calculateDifficulty()
+					difficulty: {
+						zeros: diff.zeros,
+						targetHash: diff.target,
+						difficulty: diff.difficulty
+					}
         }
     }
   }
@@ -121,7 +130,7 @@ export class BlockChain {
 
   calculateDifficulty(){
 
-		function diffToTarget(diff) {
+		const diffToTarget = (diff) => {
 			var buf = Buffer.alloc(32).fill(0);
 			function numberTo64BitBigInt(x) {
 			  const lo = x | 0;
@@ -143,7 +152,7 @@ export class BlockChain {
 			return buf.toString('hex');
 		}
 
-		function getZerosHash(hash){
+		const getZerosHash = (hash) => {
 			let charList = [];
 			for(let char of hash){
 				charList.push(char);
@@ -160,30 +169,53 @@ export class BlockChain {
 			return target;
 		}
 
-		function recalculateDiff(old_diff, new_diff){
-			return old_diff * ( old_diff / new_diff )
+		const getDiff = (time_seconds, hash_rate_seconds) => {
+		  return  ((time_seconds*hash_rate_seconds)/Math.pow(2, 32))
 		}
 
-		function getDiff(time_seconds, hash_rate_seconds){
-		  // hashes -> nonce
-		  return  ((time_seconds*hash_rate_seconds)/Math.pow(2, 32))
+		const recalculateDiff = (old_diff, new_diff) => {
+			return old_diff * ( old_diff / new_diff )
 		}
 
 		switch (new Util().l(this.chain)) {
 			case 0:
-				return this.difficultyConfig.initZerosHash;
+				let returnDifficulty = getDiff(
+					this.difficultyConfig.initTimeSeconds,
+					this.difficultyConfig.initHashRateSeconds
+				);
+				let returnTarget = diffToTarget(returnDifficulty);
+				let returnZeros = getZerosHash(returnTarget);
+				let mainReturn = {
+					zeros: returnZeros,
+					target: returnTarget,
+					difficulty: returnDifficulty
+				};
+				console.log(colors.cyan("init mainReturn Diff ->"));
+				console.log(mainReturn);
+				return mainReturn
 			default:
 
 				let lastDate = this.latestBlock().block.date;
 				let currentDate = (+ new Date());
 				let intervalSecondsTime = ((currentDate-lastDate)/1000);
+				let hashRateSeconds = this.latestBlock().block.nonce/intervalSecondsTime;
 
+				let returnDifficulty_ = recalculateDiff(
+					this.latestBlock().block.difficulty.difficulty,
+					getDiff(intervalSecondsTime, hashRateSeconds)
+				);
 
+				let returnTarget_ = diffToTarget(returnDifficulty_);
+				let returnZeros_ = getZerosHash(returnTarget_);
+				let mainReturn_ = {
+					zeros: returnZeros_,
+					target: returnTarget_,
+					difficulty: returnDifficulty_
+				};
+				console.log(colors.cyan("default mainReturn Diff ->"));
+				console.log(mainReturn_);
 
-
-
-				return "000"
-
+				return mainReturn_;
 
   	}
 	}
