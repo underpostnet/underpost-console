@@ -60,7 +60,7 @@ export class Block {
       this.block = Object.assign(this.block, obj.blockConfig);
       obj.blockConfig.index == 0 ? this.dataGenesis = obj.dataGenesis: null;
 
-      console.log(colors.magenta('Mining Block ...'));
+      console.log(colors.magenta('Mining Block '+this.block.index+' ...'));
 
     	while(!this.hash.startsWith(this.block.difficulty.zeros)) {
     		this.block.nonce++;
@@ -75,6 +75,7 @@ export class Block {
     async setData(paths){
       let storage = [];
       for(let path of paths){
+        console.log(colors.green('GET DATA  | '+new Date().toLocaleString()+' | url:'+path.url));
         storage.push({
           type: path.type,
           url: path.url,

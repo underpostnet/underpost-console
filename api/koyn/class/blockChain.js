@@ -54,8 +54,8 @@ export class BlockChain {
 
 		}
 
-		console.log(colors.yellow('rewardConfig BlockChain ->'));
-		console.log(this.rewardConfig);
+		// console.log(colors.yellow('rewardConfig BlockChain ->'));
+		// console.log(this.rewardConfig);
 
 		fs.writeFileSync(
 	    '../data/rewardConfig.json',
@@ -112,8 +112,6 @@ export class BlockChain {
 				return this.rewardConfig.rewardPerBlock[0];
 			default:
 				let indexBlock = this.latestBlock().block.index+1;
-				console.log('index block test ->');
-				console.log(indexBlock);
 				for(let i of new Util().range(0, this.rewardConfig.totalEra)){
 					switch (i) {
 						case 0:
@@ -215,20 +213,32 @@ export class BlockChain {
 
 		switch (new Util().l(this.chain)) {
 			case 0:
-				return formatDiff(true);
+				// return formatDiff(true);
+				return {
+					zeros: "000",
+					target: "XXX",
+					difficulty: 100
+				};
 			default:
-				return formatDiff(false);
+				// return formatDiff(false);
+				return {
+					zeros: "000",
+					target: "XXX",
+					difficulty: 100
+				};
   	}
 
 	}
 
 	async addBlock(obj) {
+		console.log('\n---------------------------------------');
+		console.log(colors.yellow('NEW BLOCK | '+new Date().toLocaleString()));
+		console.log(obj.blockConfig);
     let block = new Block();
 		await block.mineBlock(obj);
     this.chain.push(block);
 		this.calculateCurrentRewardDelivered();
-		console.log(colors.yellow('BlockChain Validator Status ->'));
-		console.log(colors.yellow(this.checkValid()));
+		console.log(colors.cyan('BlockChain Validator Status -> '+this.checkValid()));
 	}
 
 	checkValid() {
