@@ -6,13 +6,13 @@ import { Util } from "../../../../../src/util/class/Util.js";
 
 export class Block {
 
-    node = {};
-    block = {};
-    hash = "";
-
     constructor() {
-        this.block.date = (+ new Date());
-        this.block.nonce = 0;
+
+      this.node = {};
+      this.block = {};
+      this.hash = "";
+      this.nonce = 0;
+
     }
 
     calculateHash() {
@@ -22,14 +22,16 @@ export class Block {
             new Util().JSONstr({
               node: this.node,
               block: this.block,
-              dataGenesis: this.dataGenesis
+              dataGenesis: this.dataGenesis,
+              nonce: this.nonce
             })
           ).toString();
         default:
           return SHA256(
             new Util().JSONstr({
               node: this.node,
-              block: this.block
+              block: this.block,
+              nonce: this.nonce
             })
           ).toString();
       }
@@ -63,7 +65,7 @@ export class Block {
       console.log(colors.magenta('Mining Block '+this.block.index+' ...'));
 
     	while(!this.hash.startsWith(this.block.difficulty.zeros)) {
-    		this.block.nonce++;
+    		this.nonce++;
     		this.hash = this.calculateHash();
         // console.log(this.hash);
     	}

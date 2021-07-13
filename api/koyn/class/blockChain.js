@@ -79,7 +79,8 @@ export class BlockChain {
 						zeros: diff.zeros,
 						targetHash: diff.target,
 						difficulty: diff.difficulty
-					}
+					},
+					date: (+ new Date())
         }
       default:
         return {
@@ -90,7 +91,8 @@ export class BlockChain {
 						zeros: diff.zeros,
 						targetHash: diff.target,
 						difficulty: diff.difficulty
-					}
+					},
+					date: (+ new Date())
         }
     }
   }
@@ -182,7 +184,7 @@ export class BlockChain {
 			let lastDate = this.latestBlock().block.date;
 			let currentDate = (+ new Date());
 			let intervalSecondsTime = ((currentDate-lastDate)/1000);
-			let hashRateSeconds = this.latestBlock().block.nonce/intervalSecondsTime;
+			let hashRateSeconds = this.latestBlock().nonce/intervalSecondsTime;
 			return {
 				intervalSecondsTime: intervalSecondsTime,
 				hashRateSeconds: hashRateSeconds
@@ -205,27 +207,24 @@ export class BlockChain {
 				target: returnTarget,
 				difficulty: returnDifficulty
 			};
-			console.log(colors.cyan("Return Diff ->"));
-			console.log(mainReturn);
 			return mainReturn
 
 		};
 
-		switch (new Util().l(this.chain)) {
-			case 0:
-				// return formatDiff(true);
-				return {
-					zeros: "000",
-					target: "XXX",
-					difficulty: 100
-				};
+		switch (this.difficultyConfig.zerosConst == null) {
+			case true:
+				switch (new Util().l(this.chain)) {
+					case 0:
+						return formatDiff(true);
+					default:
+						return formatDiff(false);
+				}
 			default:
-				// return formatDiff(false);
 				return {
-					zeros: "000",
+					zeros: this.difficultyConfig.zerosConst,
 					target: "XXX",
 					difficulty: 100
-				};
+				}
   	}
 
 	}

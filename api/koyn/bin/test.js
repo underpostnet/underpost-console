@@ -1,0 +1,12 @@
+const clearLastLine = () => {
+  process.stdout.moveCursor(0, -1) // up one line
+  process.stdout.clearLine(1) // from cursor to end
+}
+
+console.log(1);
+clearLastLine();
+console.log(2);
+clearLastLine();
+console.log(3);
+clearLastLine();
+console.log(4);
