@@ -139,8 +139,8 @@
         2.3283064365386963e-8,
         1.1641532182693481e-8
     ],
-    "intervalChangeEraBlock": 1,
-    "totalEra": 32,
     "sumBlocks": 33,
-    "sumReward": 99.99999998835847
+    "sumReward": 99.99999998835847,
+    "intervalChangeEraBlock": 1,
+    "totalEra": 32
 }

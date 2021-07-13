@@ -13,16 +13,17 @@ export class BlockChain {
 
 		this.difficultyConfig = obj.difficultyConfig;
 
-		this.rewardConfig = {
-			era: [],
-			reward: [],
-			blocks: [],
-			rewardPerBlock: [],
-			intervalChangeEraBlock: obj.rewardConfig.intervalChangeEraBlock,
-			totalEra: obj.rewardConfig.totalEra,
-			sumBlocks: 0,
-			sumReward: 0
-		};
+		this.rewardConfig = Object.assign(
+			{
+				era: [],
+				reward: [],
+				blocks: [],
+				rewardPerBlock: [],
+				sumBlocks: 0,
+				sumReward: 0
+			},
+			obj.rewardConfig
+		);
 		this.setRewardConfig();
 
 	}
@@ -130,14 +131,16 @@ export class BlockChain {
 
   calculateDifficulty(){
 
+		const numberTo64BitBigInt = (x) => {
+			const lo = x | 0;
+			const rawHi = (x / 4294967296.0) | 0; // 2^32
+			const hi = (x < 0 && lo != 0) ? (rawHi - 1) | 0 : rawHi;
+			return (BigInt(hi) << 32n) | BigInt(lo >>> 0);
+		}
+
 		const diffToTarget = (diff) => {
 			var buf = Buffer.alloc(32).fill(0);
-			function numberTo64BitBigInt(x) {
-			  const lo = x | 0;
-			  const rawHi = (x / 4294967296.0) | 0; // 2^32
-			  const hi = (x < 0 && lo != 0) ? (rawHi - 1) | 0 : rawHi;
-			  return (BigInt(hi) << 32n) | BigInt(lo >>> 0);
-			}
+
 			if(!isFinite(diff) || diff <= 0) {
 				buf.fill(0xff);
 				return buf.toString('hex');
@@ -150,7 +153,7 @@ export class BlockChain {
 			buf.writeUInt32LE(Number(0xffffffffn & m) >>> 0, k << 2);
 			buf.writeUInt32LE(Number(m >> 32n) >>> 0, 4 + (k << 2));
 			return buf.toString('hex');
-		}
+		};
 
 		const getZerosHash = (hash) => {
 			let charList = [];
@@ -167,57 +170,56 @@ export class BlockChain {
 				}
 			}
 			return target;
-		}
+		};
 
-		const getDiff = (time_seconds, hash_rate_seconds) => {
-		  return  ((time_seconds*hash_rate_seconds)/Math.pow(2, 32))
-		}
+		const getDiff = (obj) => {
+		  return  ((obj.intervalSecondsTime*obj.hashRateSeconds)/Math.pow(2, 32))
+		};
 
 		const recalculateDiff = (old_diff, new_diff) => {
 			return old_diff * ( old_diff / new_diff )
-		}
+		};
+
+		const getHashTimeData = () => {
+			let lastDate = this.latestBlock().block.date;
+			let currentDate = (+ new Date());
+			let intervalSecondsTime = ((currentDate-lastDate)/1000);
+			let hashRateSeconds = this.latestBlock().block.nonce/intervalSecondsTime;
+			return {
+				intervalSecondsTime: intervalSecondsTime,
+				hashRateSeconds: hashRateSeconds
+			};
+		};
+
+		const formatDiff = (genesis) => {
+
+			let returnDifficulty = genesis ?
+			getDiff(this.difficultyConfig) :
+			recalculateDiff(
+				this.latestBlock().block.difficulty.difficulty,
+				getDiff(getHashTimeData())
+			);
+
+			let returnTarget = diffToTarget(returnDifficulty);
+			let returnZeros = getZerosHash(returnTarget);
+			let mainReturn = {
+				zeros: returnZeros,
+				target: returnTarget,
+				difficulty: returnDifficulty
+			};
+			console.log(colors.cyan("Return Diff ->"));
+			console.log(mainReturn);
+			return mainReturn
+
+		};
 
 		switch (new Util().l(this.chain)) {
 			case 0:
-				let returnDifficulty = getDiff(
-					this.difficultyConfig.initTimeSeconds,
-					this.difficultyConfig.initHashRateSeconds
-				);
-				let returnTarget = diffToTarget(returnDifficulty);
-				let returnZeros = getZerosHash(returnTarget);
-				let mainReturn = {
-					zeros: returnZeros,
-					target: returnTarget,
-					difficulty: returnDifficulty
-				};
-				console.log(colors.cyan("init mainReturn Diff ->"));
-				console.log(mainReturn);
-				return mainReturn
+				return formatDiff(true);
 			default:
-
-				let lastDate = this.latestBlock().block.date;
-				let currentDate = (+ new Date());
-				let intervalSecondsTime = ((currentDate-lastDate)/1000);
-				let hashRateSeconds = this.latestBlock().block.nonce/intervalSecondsTime;
-
-				let returnDifficulty_ = recalculateDiff(
-					this.latestBlock().block.difficulty.difficulty,
-					getDiff(intervalSecondsTime, hashRateSeconds)
-				);
-
-				let returnTarget_ = diffToTarget(returnDifficulty_);
-				let returnZeros_ = getZerosHash(returnTarget_);
-				let mainReturn_ = {
-					zeros: returnZeros_,
-					target: returnTarget_,
-					difficulty: returnDifficulty_
-				};
-				console.log(colors.cyan("default mainReturn Diff ->"));
-				console.log(mainReturn_);
-
-				return mainReturn_;
-
+				return formatDiff(false);
   	}
+
 	}
 
 	async addBlock(obj) {

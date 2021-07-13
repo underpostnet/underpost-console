@@ -13,8 +13,8 @@ new BlockChain({
     totalEra: 32
   },
   difficultyConfig: {
-    initTimeSeconds: 600, /* 600sec -> 10 min */
-    initHashRateSeconds: 6500 /* 6500 hash/sec */
+    intervalSecondsTime: 600, /* 600sec -> 10 min */
+    hashRateSeconds: 100 /* 6500 hash/sec */
   }
 }).mainProcess({
   rewardAddress: "APOJA7S8ASNA9S8WE",
