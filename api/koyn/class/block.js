@@ -64,10 +64,39 @@ export class Block {
 
       console.log(colors.magenta('Mining Block '+this.block.index+' ...'));
 
+      let timer_= (+ new Date());
+      let size_ = 2;
+      let h_ = 0;
+      let m_ = 0;
+      let s_ = 0;
+      console.log(colors.magenta('00:00:00'));
+
     	while(!this.hash.startsWith(this.block.difficulty.zeros)) {
+
     		this.nonce++;
     		this.hash = this.calculateHash();
         // console.log(this.hash);
+
+        let current_ = (+ new Date());
+        if(current_-timer_>1000){
+          s_++;
+          if(s_==60){
+            s_ = 0;
+            m_++;
+          }
+          if(m_==60){
+            m_ = 0;
+            h_++;
+          }
+          timer_ = current_;
+          new Util().clearLastLine();
+          console.log(colors.magenta(
+            new Util().pad(h_, size_)+':'+
+            new Util().pad(m_, size_)+':'+
+            new Util().pad(s_, size_)
+          ));
+        }
+
     	}
 
       console.log(this);
