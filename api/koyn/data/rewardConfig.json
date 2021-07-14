@@ -142,5 +142,6 @@
     "sumBlocks": 33,
     "sumReward": 99.99999998835847,
     "intervalChangeEraBlock": 1,
-    "totalEra": 32
+    "totalEra": 32,
+    "totalBlocks": 34
 }

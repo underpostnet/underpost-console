@@ -218,7 +218,7 @@ export class BlockChain {
 					}
 					if(this.difficultyConfig.avgSecTimeBlock>dataLastBlockTime.intervalSecondsTime){
 						let difference = dataLastBlockTime.intervalSecondsTime / this.difficultyConfig.avgSecTimeBlock;
-						let newDiff = this.latestBlock().block.difficulty.difficulty*(1.5 + difference );
+						let newDiff = this.latestBlock().block.difficulty.difficulty*(1 + difference );
 						return formatDiff(newDiff);
 					}
 					if(this.difficultyConfig.avgSecTimeBlock<dataLastBlockTime.intervalSecondsTime){
@@ -257,7 +257,8 @@ export class BlockChain {
 		await block.mineBlock(obj);
     this.chain.push(block);
 		this.calculateCurrentRewardDelivered();
-		console.log(colors.cyan('BlockChain Validator Status -> '+this.checkValid()));
+		this.calculateZerosAvgTimeBlock();
+		console.log(colors.cyan('validator-status:'+this.checkValid()));
 	}
 
 	checkValid() {
@@ -277,7 +278,7 @@ export class BlockChain {
 	}
 
 	async mainProcess(obj){
-		for(let i=0; i<obj.totalBlocks; i++){
+		for(let i=0; i<(this.rewardConfig.totalBlocks-1); i++){
 			switch (new Util().l(this.chain)) {
 				case 0:
 					await this.addBlock({
@@ -302,7 +303,55 @@ export class BlockChain {
 		for(let block of this.chain){
 			currentReward += block.block.reward;
 		}
-		console.log(colors.cyan('Current Reward Delivered -> '+currentReward));
+		console.log(colors.cyan('current-reward-delivered:'+currentReward));
+	}
+
+	calculateZerosAvgTimeBlock(){
+
+		let sumIntervalBlock = ((+ new Date())-this.chain[0].block.date)/1000;
+		let contIntervalBlock = 1;
+		let sumNonce = this.chain[0].nonce;
+
+		for(let i=1; i<new Util().l(this.chain); i++){
+
+			if(i==1){sumIntervalBlock=0;}
+
+			let lastDate = this.chain[i-1].block.date/1000;
+			let currentDate = this.chain[i].block.date/1000;
+			sumIntervalBlock += currentDate-lastDate;
+			contIntervalBlock++;
+			sumNonce += this.chain[i].nonce;
+		}
+		let avgReturn = ( sumIntervalBlock / contIntervalBlock ).toFixed(2);
+		let avgHashRate = ( sumNonce / sumIntervalBlock ).toFixed(2);
+
+		console.log(colors.cyan('current-avg-block-time:'+avgReturn+' s'));
+		console.log(colors.cyan('current-avg-hash-rate:'+avgHashRate+' hash/s'));
+
+
+		if((this.latestBlock().block.index==(this.rewardConfig.totalBlocks-1))
+			&& (this.difficultyConfig.zerosConst!=null) ){
+
+			let pathZeros = '../data/zeros-test/'+this.difficultyConfig.zerosConst+'.json';
+			let currentZerosData = [];
+			if (fs.existsSync(pathZeros)){
+				currentZerosData =  JSON.parse(
+					fs.readFileSync(pathZeros, {encoding:'utf8'})
+				);
+			}
+
+			currentZerosData.push({
+				avgTimeBlock: avgReturn,
+				avgHashRate: avgHashRate
+			});
+
+			fs.writeFileSync(
+				pathZeros,
+				new Util().jsonSave(currentZerosData),
+				'utf-8'
+			);
+
+		}
 	}
 
 	generateJSON(){

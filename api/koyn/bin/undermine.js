@@ -10,17 +10,17 @@ import { BlockChain } from "../class/blockChain.js";
 new BlockChain({
   rewardConfig: {
     intervalChangeEraBlock: 1, /* 1 - 210000 */
-    totalEra: 32
+    totalEra: 32,
+    totalBlocks: 34
   },
   difficultyConfig: {
-    intervalSecondsTime: 600, /* 600sec -> 10 min */
-    hashRateSeconds: 100, /* 6500 hash/sec */
+    intervalSecondsTime: 10, /* 600sec -> 10 min */
+    hashRateSeconds: 6000, /* 6500 hash/sec */
     avgSecTimeBlock: 10,
-    zerosConst: null
+    zerosConst: "000"
   }
 }).mainProcess({
   rewardAddress: "APOJA7S8ASNA9S8WE",
-  totalBlocks: 33,
   paths: [
     {
       url: 'http://localhost:3001/koyn',
