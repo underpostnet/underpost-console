@@ -176,38 +176,58 @@ export class BlockChain {
 		  return  ((obj.intervalSecondsTime*obj.hashRateSeconds)/Math.pow(2, 32))
 		};
 
-		const recalculateDiff = (old_diff, new_diff) => {
-			return old_diff * ( old_diff / new_diff )
-		};
-
 		const getHashTimeData = () => {
 			let lastDate = this.latestBlock().block.date;
 			let currentDate = (+ new Date());
 			let intervalSecondsTime = ((currentDate-lastDate)/1000);
 			let hashRateSeconds = this.latestBlock().nonce/intervalSecondsTime;
 			return {
+				lastDate: lastDate,
+				currentDate: currentDate,
 				intervalSecondsTime: intervalSecondsTime,
 				hashRateSeconds: hashRateSeconds
 			};
 		};
 
-		const formatDiff = (genesis) => {
-
-			let returnDifficulty = genesis ?
-			getDiff(this.difficultyConfig) :
-			recalculateDiff(
-				this.latestBlock().block.difficulty.difficulty,
-				getDiff(getHashTimeData())
-			);
-
-			let returnTarget = diffToTarget(returnDifficulty);
+		const formatDiff = (diff) => {
+			let returnTarget = diffToTarget(diff);
 			let returnZeros = getZerosHash(returnTarget);
-			let mainReturn = {
+			return {
 				zeros: returnZeros,
 				target: returnTarget,
-				difficulty: returnDifficulty
+				difficulty: diff
 			};
-			return mainReturn
+		};
+
+		const processDiff = (genesis) => {
+
+			switch (genesis) {
+				case true:
+					let returnDifficulty = getDiff(this.difficultyConfig);
+					let returnTarget = diffToTarget(returnDifficulty);
+					let returnZeros = getZerosHash(returnTarget);
+					return {
+						zeros: returnZeros,
+						target: returnTarget,
+						difficulty: returnDifficulty
+					}
+				default:
+					let dataLastBlockTime = getHashTimeData();
+					if(this.difficultyConfig.avgSecTimeBlock==dataLastBlockTime.intervalSecondsTime){
+						return this.latestBlock().block.difficulty;
+					}
+					if(this.difficultyConfig.avgSecTimeBlock>dataLastBlockTime.intervalSecondsTime){
+						let difference = dataLastBlockTime.intervalSecondsTime / this.difficultyConfig.avgSecTimeBlock;
+						let newDiff = this.latestBlock().block.difficulty.difficulty*(1.5 + difference );
+						return formatDiff(newDiff);
+					}
+					if(this.difficultyConfig.avgSecTimeBlock<dataLastBlockTime.intervalSecondsTime){
+						let difference = this.difficultyConfig.avgSecTimeBlock / dataLastBlockTime.intervalSecondsTime;
+						let newDiff = this.latestBlock().block.difficulty.difficulty*( difference );
+						return formatDiff(newDiff);
+					}
+	  	}
+
 
 		};
 
@@ -215,9 +235,9 @@ export class BlockChain {
 			case true:
 				switch (new Util().l(this.chain)) {
 					case 0:
-						return formatDiff(true);
+						return processDiff(true);
 					default:
-						return formatDiff(false);
+						return processDiff(false);
 				}
 			default:
 				return {

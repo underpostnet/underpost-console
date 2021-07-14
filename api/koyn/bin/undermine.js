@@ -15,7 +15,8 @@ new BlockChain({
   difficultyConfig: {
     intervalSecondsTime: 600, /* 600sec -> 10 min */
     hashRateSeconds: 100, /* 6500 hash/sec */
-    zerosConst: "0000"
+    avgSecTimeBlock: 10,
+    zerosConst: null
   }
 }).mainProcess({
   rewardAddress: "APOJA7S8ASNA9S8WE",
