@@ -17,7 +17,7 @@ new BlockChain({
     intervalSecondsTime: 10, /* 600sec -> 10 min */
     hashRateSeconds: 6000, /* 6500 hash/sec */
     avgSecTimeBlock: 10,
-    zerosConst: "000"
+    zerosConst: "00000"
   }
 }).mainProcess({
   rewardAddress: "APOJA7S8ASNA9S8WE",
