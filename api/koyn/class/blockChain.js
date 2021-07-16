@@ -173,25 +173,33 @@ export class BlockChain {
 		};
 
 		const getDiff = (obj) => {
-		  return  ((obj.intervalSecondsTime*obj.hashRateSeconds)/Math.pow(2, 32))
+		  return  ((obj.intervalSecondsTime*obj.hashRateSeconds)
+								/Math.pow(2, 32))
 		};
 
-		const getHashTimeData = () => {
+		const getDynamicDiff = () => {
+
 			let lastDate = this.latestBlock().block.date;
 			let currentDate = (+ new Date());
 			let intervalSecondsTime = ((currentDate-lastDate)/1000);
-			let hashRateSeconds = this.latestBlock().nonce/intervalSecondsTime;
-			return {
-				lastDate: lastDate,
-				currentDate: currentDate,
-				intervalSecondsTime: intervalSecondsTime,
-				hashRateSeconds: hashRateSeconds
-			};
+
+			console.log(colors.cyan('difficulty-time-factor:'+
+			(this.difficultyConfig.intervalSecondsTime/intervalSecondsTime)
+			));
+
+			/* avg interval recalculate difficulty more blocks more precision */
+
+			return intervalSecondsTime == this.difficultyConfig.intervalSecondsTime ?
+			this.latestBlock().block.difficulty.difficulty :
+			this.latestBlock().block.difficulty.difficulty *
+			(this.difficultyConfig.intervalSecondsTime/intervalSecondsTime);
+
 		};
 
 		const formatDiff = (diff) => {
 			let returnTarget = diffToTarget(diff);
 			let returnZeros = getZerosHash(returnTarget);
+			new Util().l(returnZeros) < 1 ? returnZeros = "0" : null;
 			return {
 				zeros: returnZeros,
 				target: returnTarget,
@@ -200,35 +208,10 @@ export class BlockChain {
 		};
 
 		const processDiff = (genesis) => {
-
-			switch (genesis) {
-				case true:
-					let returnDifficulty = getDiff(this.difficultyConfig);
-					let returnTarget = diffToTarget(returnDifficulty);
-					let returnZeros = getZerosHash(returnTarget);
-					return {
-						zeros: returnZeros,
-						target: returnTarget,
-						difficulty: returnDifficulty
-					}
-				default:
-					let dataLastBlockTime = getHashTimeData();
-					if(this.difficultyConfig.avgSecTimeBlock==dataLastBlockTime.intervalSecondsTime){
-						return this.latestBlock().block.difficulty;
-					}
-					if(this.difficultyConfig.avgSecTimeBlock>dataLastBlockTime.intervalSecondsTime){
-						let difference = dataLastBlockTime.intervalSecondsTime / this.difficultyConfig.avgSecTimeBlock;
-						let newDiff = this.latestBlock().block.difficulty.difficulty*(1 + difference );
-						return formatDiff(newDiff);
-					}
-					if(this.difficultyConfig.avgSecTimeBlock<dataLastBlockTime.intervalSecondsTime){
-						let difference = this.difficultyConfig.avgSecTimeBlock / dataLastBlockTime.intervalSecondsTime;
-						let newDiff = this.latestBlock().block.difficulty.difficulty*( difference );
-						return formatDiff(newDiff);
-					}
-	  	}
-
-
+			let returnDifficulty =	genesis ?
+			getDiff(this.difficultyConfig) :
+			getDynamicDiff();
+			return formatDiff(returnDifficulty);
 		};
 
 		switch (this.difficultyConfig.zerosConst == null) {
@@ -242,8 +225,8 @@ export class BlockChain {
 			default:
 				return {
 					zeros: this.difficultyConfig.zerosConst,
-					target: "XXX",
-					difficulty: 100
+					target: null,
+					difficulty: null
 				}
   	}
 
@@ -314,7 +297,7 @@ export class BlockChain {
 
 		for(let i=1; i<new Util().l(this.chain); i++){
 
-			if(i==1){sumIntervalBlock=0;}
+			i == 1 ? sumIntervalBlock = 0 : null ;
 
 			let lastDate = this.chain[i-1].block.date/1000;
 			let currentDate = this.chain[i].block.date/1000;
