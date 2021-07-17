@@ -65,17 +65,18 @@ export class Block {
       console.log(colors.magenta('Mining Block '+this.block.index+' ...'));
 
       let timer_= (+ new Date());
+      let start_ = (+ new Date());
       let size_ = 2;
       let h_ = 0;
       let m_ = 0;
       let s_ = 0;
-      let contSec = 0;
+
       console.log(colors.magenta('time:00:00:00 nonce:0 hash/s:0'));
 
       const logStat = (force)=>{
         let current_ = (+ new Date());
         if((current_-timer_>1000)||force){
-          contSec++;
+
           (current_-timer_>1000) ? s_++ : null;
           if(s_==60){
             s_ = 0;
@@ -86,6 +87,7 @@ export class Block {
             h_++;
           }
           timer_ = current_;
+
           new Util().clearLastLine();
           console.log(colors.magenta(
             'time:'+
@@ -93,7 +95,7 @@ export class Block {
             new Util().pad(m_, size_)+':'+
             new Util().pad(s_, size_)+' nonce:'+
             this.nonce+' hash/s:'+
-            ((this.nonce/contSec).toFixed(2))
+            ((this.nonce/  (((+ new Date())-start_)/1000)  ).toFixed(2))
           ));
         }
       };

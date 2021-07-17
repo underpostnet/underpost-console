@@ -207,9 +207,16 @@ export class BlockChain {
 
 			console.log(colors.cyan('recalculate-difficulty-factor:'+differenceFactor));
 
-			return differenceFactor == 1 ?
-			this.latestBlock().block.difficulty.difficulty :
-			this.latestBlock().block.difficulty.difficulty * differenceFactor;
+			let newDiff = this.latestBlock().block.difficulty.difficulty * differenceFactor;
+
+			new Util().l(getZerosHash(diffToTarget(newDiff*1.02))) <
+			new Util().l(getZerosHash(diffToTarget(newDiff))) ?
+			newDiff = newDiff*1.02 :
+			new Util().l(getZerosHash(diffToTarget(newDiff*0.98))) >
+			new Util().l(getZerosHash(diffToTarget(newDiff))) ?
+			newDiff = newDiff*0.98 : null ;
+
+			return differenceFactor == 1 ? this.latestBlock().block.difficulty.difficulty : newDiff;
 
 		};
 
@@ -320,10 +327,15 @@ export class BlockChain {
 		let fromZeros = this.latestBlock().block.index;
 
 		try {
-			while(this.chain[fromZeros].block.difficulty.zeros==lastZeros){
+			while(
+
+				(this.chain[fromZeros].block.index)
+				%
+				this.difficultyConfig.intervalCalculateDifficulty != 0
+
+			){
 				fromZeros--;
 			}
-			fromZeros++;
 		}catch(negativeIndex){
 			fromZeros = 0;
 		}
@@ -340,6 +352,7 @@ export class BlockChain {
 		let avgReturn = ( sumTimeIntervalBlock / contIntervalBlock ).toFixed(2);
 		let avgHashRate = ( sumNonce / sumTimeIntervalBlock ).toFixed(2);
 
+		console.log(colors.cyan('current-avg-from-index-data:'+fromZeros));
 		console.log(colors.cyan('current-avg-block-time:'+avgReturn+' s'));
 		console.log(colors.cyan('current-avg-hash-rate:'+avgHashRate+' hash/s'));
 
