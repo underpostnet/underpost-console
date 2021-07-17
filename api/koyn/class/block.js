@@ -72,16 +72,11 @@ export class Block {
       let contSec = 0;
       console.log(colors.magenta('time:00:00:00 nonce:0 hash/s:0'));
 
-    	while(!this.hash.startsWith(this.block.difficulty.zeros)) {
-
-    		this.nonce++;
-    		this.hash = this.calculateHash();
-        // console.log(this.hash);
-
+      const logStat = (force)=>{
         let current_ = (+ new Date());
-        if(current_-timer_>1000){
+        if((current_-timer_>1000)||force){
           contSec++;
-          s_++;
+          (current_-timer_>1000) ? s_++ : null;
           if(s_==60){
             s_ = 0;
             m_++;
@@ -101,8 +96,15 @@ export class Block {
             ((this.nonce/contSec).toFixed(2))
           ));
         }
+      };
 
+    	while(!this.hash.startsWith(this.block.difficulty.zeros)) {
+    		this.nonce++;
+    		this.hash = this.calculateHash();
+        // console.log(this.hash);
+        logStat(false);
     	}
+      logStat(true);
 
       console.log(this);
 

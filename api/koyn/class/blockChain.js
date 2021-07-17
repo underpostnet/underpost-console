@@ -179,20 +179,37 @@ export class BlockChain {
 
 		const getDynamicDiff = () => {
 
-			let lastDate = this.latestBlock().block.date;
+			let from_ = new Util().l(this.chain)-this.difficultyConfig.intervalCalculateDifficulty;
+
+			let lastDate = this.chain[from_].block.date;
 			let currentDate = (+ new Date());
 			let intervalSecondsTime = ((currentDate-lastDate)/1000);
+			let totalNonce = 0;
 
-			console.log(colors.cyan('difficulty-time-factor:'+
-			(this.difficultyConfig.intervalSecondsTime/intervalSecondsTime)
-			));
+			for(let i=from_;i<new Util().l(this.chain);i++){
+ 				totalNonce += this.chain[i].nonce;
+			}
+			let hashRateSeconds = intervalSecondsTime / totalNonce ;
 
-			/* avg interval recalculate difficulty more blocks more precision */
+			let currentDiff = getDiff({
+				intervalSecondsTime: intervalSecondsTime,
+				hashRateSeconds: hashRateSeconds
+			});
+			let expectedDiff = getDiff({
+				intervalSecondsTime: this.difficultyConfig.intervalSecondsTime,
+				hashRateSeconds: hashRateSeconds
+			});
 
-			return intervalSecondsTime == this.difficultyConfig.intervalSecondsTime ?
+			let differenceFactor = expectedDiff / currentDiff ;
+
+			differenceFactor < 1 ? differenceFactor =
+			differenceFactor * this.difficultyConfig.intervalSecondsTime: null;
+
+			console.log(colors.cyan('recalculate-difficulty-factor:'+differenceFactor));
+
+			return differenceFactor == 1 ?
 			this.latestBlock().block.difficulty.difficulty :
-			this.latestBlock().block.difficulty.difficulty *
-			(this.difficultyConfig.intervalSecondsTime/intervalSecondsTime);
+			this.latestBlock().block.difficulty.difficulty * differenceFactor;
 
 		};
 
@@ -214,21 +231,29 @@ export class BlockChain {
 			return formatDiff(returnDifficulty);
 		};
 
-		switch (this.difficultyConfig.zerosConst == null) {
-			case true:
-				switch (new Util().l(this.chain)) {
-					case 0:
-						return processDiff(true);
-					default:
-						return processDiff(false);
-				}
-			default:
-				return {
-					zeros: this.difficultyConfig.zerosConst,
-					target: null,
-					difficulty: null
-				}
-  	}
+		if( new Util().l(this.chain) % this.difficultyConfig.intervalCalculateDifficulty == 0 ){
+			switch (this.difficultyConfig.zerosConst == null) {
+				case true:
+					switch (new Util().l(this.chain)) {
+						case 0:
+							return processDiff(true);
+						default:
+							return processDiff(false);
+					}
+				default:
+					return {
+						zeros: this.difficultyConfig.zerosConst,
+						target: null,
+						difficulty: null
+					}
+	  	}
+		}else{
+			return {
+				zeros: this.latestBlock().block.difficulty.zeros,
+				target: this.latestBlock().block.difficulty.targetHash,
+				difficulty: this.latestBlock().block.difficulty.difficulty
+			}
+		}
 
 	}
 
@@ -291,26 +316,32 @@ export class BlockChain {
 
 	calculateZerosAvgTimeBlock(){
 
-		let sumIntervalBlock = ((+ new Date())-this.chain[0].block.date)/1000;
-		let contIntervalBlock = 1;
-		let sumNonce = this.chain[0].nonce;
+		let lastZeros = this.latestBlock().block.difficulty.zeros;
+		let fromZeros = this.latestBlock().block.index;
 
-		for(let i=1; i<new Util().l(this.chain); i++){
+		try {
+			while(this.chain[fromZeros].block.difficulty.zeros==lastZeros){
+				fromZeros--;
+			}
+			fromZeros++;
+		}catch(negativeIndex){
+			fromZeros = 0;
+		}
 
-			i == 1 ? sumIntervalBlock = 0 : null ;
+		let sumTimeIntervalBlock = ((+ new Date())-this.chain[fromZeros].block.date)/1000;
+		let contIntervalBlock = 0;
+		let sumNonce = 0;
 
-			let lastDate = this.chain[i-1].block.date/1000;
-			let currentDate = this.chain[i].block.date/1000;
-			sumIntervalBlock += currentDate-lastDate;
+		for(let i=fromZeros; i<new Util().l(this.chain); i++){
 			contIntervalBlock++;
 			sumNonce += this.chain[i].nonce;
 		}
-		let avgReturn = ( sumIntervalBlock / contIntervalBlock ).toFixed(2);
-		let avgHashRate = ( sumNonce / sumIntervalBlock ).toFixed(2);
+
+		let avgReturn = ( sumTimeIntervalBlock / contIntervalBlock ).toFixed(2);
+		let avgHashRate = ( sumNonce / sumTimeIntervalBlock ).toFixed(2);
 
 		console.log(colors.cyan('current-avg-block-time:'+avgReturn+' s'));
 		console.log(colors.cyan('current-avg-hash-rate:'+avgHashRate+' hash/s'));
-
 
 		if((this.latestBlock().block.index==(this.rewardConfig.totalBlocks-1))
 			&& (this.difficultyConfig.zerosConst!=null) ){

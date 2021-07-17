@@ -14,8 +14,9 @@ new BlockChain({
     totalBlocks: 34
   },
   difficultyConfig: {
-    hashRateSeconds: 6000, /* 6500 hash/sec */
-    intervalSecondsTime: 10, /* 600sec -> 10 min */
+    hashRateSeconds: 6000,
+    intervalSecondsTime: 10,
+    intervalCalculateDifficulty: 10,
     zerosConst: null
   }
 }).mainProcess({
