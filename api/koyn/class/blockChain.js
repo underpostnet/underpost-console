@@ -211,10 +211,10 @@ export class BlockChain {
 
 			new Util().l(getZerosHash(diffToTarget(newDiff*1.02))) <
 			new Util().l(getZerosHash(diffToTarget(newDiff))) ?
-			newDiff = newDiff*1.02 :
-			new Util().l(getZerosHash(diffToTarget(newDiff*0.98))) >
+			newDiff = newDiff*1.02 : null;
+			/*new Util().l(getZerosHash(diffToTarget(newDiff*0.98))) >
 			new Util().l(getZerosHash(diffToTarget(newDiff))) ?
-			newDiff = newDiff*0.98 : null ;
+			newDiff = newDiff*0.98 : null ;*/
 
 			return differenceFactor == 1 ? this.latestBlock().block.difficulty.difficulty : newDiff;
 
