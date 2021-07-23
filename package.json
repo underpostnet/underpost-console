@@ -30,6 +30,7 @@
     "colors": "latest",
     "express-session": "latest",
     "crypto-js": "latest",
-    "file-get-contents": "latest"
+    "file-get-contents": "latest",
+    "ws": "latest"
   }
 }
