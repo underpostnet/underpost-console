@@ -11,10 +11,13 @@ new BlockChain({
   generation: '0',
   version: '0.0.0',
   hashGeneration: null,
-  previousHashGeneration: null,
+  // pathPreviousHashGeneration: '../data/blockchain/generation-0/hash',
+  pathPreviousHashGeneration: null,
+  dataGenesisHashGeneration: 'khrónos',
   userConfig: {
     blocksToUndermine: null,
-    zerosConstDifficulty: null
+    zerosConstDifficulty: null,
+    rewardAddress: "APOJA7S8ASNA9S8WE",
   },
   rewardConfig: {
     intervalChangeEraBlock: 1, /* 1 - 210000 - 300000 */
@@ -28,7 +31,6 @@ new BlockChain({
     intervalCalculateDifficulty: 10
   }
 }).mainProcess({
-  rewardAddress: "APOJA7S8ASNA9S8WE",
   paths: [
     {
       url: 'http://localhost:3001/koyn',

@@ -15,6 +15,8 @@ export class BlockChain {
 
 		this.userConfig = obj.userConfig;
 
+		this.setPreviousHahsGeneration(obj.pathPreviousHashGeneration);
+
 		this.chain = [];
 
 		this.difficultyConfig = obj.difficultyConfig;
@@ -87,6 +89,12 @@ export class BlockChain {
 
 	}
 
+	setPreviousHahsGeneration(path){
+		path == null ?
+		this.previousHashGeneration = SHA256(this.dataGenesisHashGeneration).toString():
+		this.previousHashGeneration = fs.readFileSync(path, 'utf8');
+	}
+
   currentBlockConfig(){
 		let diff = this.calculateDifficulty();
     switch (new Util().l(this.chain)) {
@@ -104,7 +112,8 @@ export class BlockChain {
 					},
 					date: (+ new Date()),
 					version: this.version,
-					generation: this.generation
+					generation: this.generation,
+					previousHashGeneration: this.previousHashGeneration
         }
       default:
         return {
@@ -118,7 +127,8 @@ export class BlockChain {
 					},
 					date: (+ new Date()),
 					version: this.version,
-					generation: this.generation
+					generation: this.generation,
+					previousHashGeneration: this.previousHashGeneration
         }
     }
   }
@@ -126,7 +136,10 @@ export class BlockChain {
 	genesisBlockChainConfig(){
 		return {
 			difficultyConfig: this.difficultyConfig,
-			rewardConfig: this.rewardConfig
+			rewardConfig: this.rewardConfig,
+			generation: this.generation,
+		  version: this.version,
+			previousHashGeneration: this.previousHashGeneration
 		}
 	}
 
@@ -334,14 +347,14 @@ export class BlockChain {
 			switch (new Util().l(this.chain)) {
 				case 0:
 					await this.addBlock({
-						rewardAddress: obj.rewardAddress,
+						rewardAddress: this.userConfig.rewardAddress,
 						paths: obj.paths,
 						blockConfig: this.currentBlockConfig(),
 						dataGenesis: this.genesisBlockChainConfig()
 					})
 				default:
 					await this.addBlock({
-						rewardAddress: obj.rewardAddress,
+						rewardAddress: this.userConfig.rewardAddress,
 						paths: obj.paths,
 						blockConfig: this.currentBlockConfig()
 					})
@@ -420,11 +433,27 @@ export class BlockChain {
 	}
 
 	generateJSON(){
+
+		this.hashGeneration = SHA256(
+			new Util().JSONstr(this.chain)
+		).toString();
+
+		! fs.existsSync('../data/blockchain/generation-'+this.generation) ?
+		fs.mkdirSync('../data/blockchain/generation-'+this.generation) :
+		null;
+
 		fs.writeFileSync(
-	    '../data/blockChain.json',
+	    '../data/blockchain/generation-'+this.generation+'/chain.json',
 	    new Util().jsonSave(this.chain),
 	    'utf-8'
 	  );
+
+		fs.writeFileSync(
+	    '../data/blockchain/generation-'+this.generation+'/hash',
+			this.hashGeneration,
+	    'utf-8'
+	  );
+
 	}
 
 }
