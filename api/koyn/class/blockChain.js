@@ -9,6 +9,12 @@ export class BlockChain {
 
 	constructor(obj) {
 
+		this.generation = obj.generation;
+
+		this.version = obj.version;
+
+		this.userConfig = obj.userConfig;
+
 		this.chain = [];
 
 		this.difficultyConfig = obj.difficultyConfig;
@@ -19,6 +25,7 @@ export class BlockChain {
 				reward: [],
 				blocks: [],
 				rewardPerBlock: [],
+				rewardPerBlockInt: [],
 				sumBlocks: 0,
 				sumReward: 0
 			},
@@ -44,6 +51,13 @@ export class BlockChain {
 					(new Util().l(this.rewardConfig.reward)-1)
 				]
 				/	this.rewardConfig.intervalChangeEraBlock
+			);
+
+			this.rewardConfig.rewardPerBlockInt.push(
+				Math.trunc((this.rewardConfig.reward[
+					(new Util().l(this.rewardConfig.reward)-1)
+				]
+				/	this.rewardConfig.intervalChangeEraBlock)*100)
 			);
 
 			this.rewardConfig.sumBlocks += this.rewardConfig.intervalChangeEraBlock;
@@ -80,7 +94,8 @@ export class BlockChain {
 						targetHash: diff.target,
 						difficulty: diff.difficulty
 					},
-					date: (+ new Date())
+					date: (+ new Date()),
+					version: this.version
         }
       default:
         return {
@@ -92,7 +107,8 @@ export class BlockChain {
 						targetHash: diff.target,
 						difficulty: diff.difficulty
 					},
-					date: (+ new Date())
+					date: (+ new Date()),
+					version: this.version
         }
     }
   }
@@ -100,7 +116,8 @@ export class BlockChain {
 	genesisBlockChainConfig(){
 		return {
 			difficultyConfig: this.difficultyConfig,
-			rewardConfig: this.rewardConfig
+			rewardConfig: this.rewardConfig,
+			generation: this.generation
 		}
 	}
 
@@ -239,7 +256,7 @@ export class BlockChain {
 		};
 
 		if( new Util().l(this.chain) % this.difficultyConfig.intervalCalculateDifficulty == 0 ){
-			switch (this.difficultyConfig.zerosConst == null) {
+			switch (this.userConfig.zerosConstDifficulty == null) {
 				case true:
 					switch (new Util().l(this.chain)) {
 						case 0:
@@ -249,7 +266,7 @@ export class BlockChain {
 					}
 				default:
 					return {
-						zeros: this.difficultyConfig.zerosConst,
+						zeros: this.userConfig.zerosConstDifficulty,
 						target: null,
 						difficulty: null
 					}
@@ -293,7 +310,7 @@ export class BlockChain {
 	}
 
 	async mainProcess(obj){
-		for(let i=0; i<(this.rewardConfig.totalBlocks-1); i++){
+		for(let i=0; i<(this.userConfig.blocksToUndermine-1); i++){
 			switch (new Util().l(this.chain)) {
 				case 0:
 					await this.addBlock({
@@ -356,10 +373,10 @@ export class BlockChain {
 		console.log(colors.cyan('current-avg-block-time:'+avgReturn+' s'));
 		console.log(colors.cyan('current-avg-hash-rate:'+avgHashRate+' hash/s'));
 
-		if((this.latestBlock().block.index==(this.rewardConfig.totalBlocks-1))
-			&& (this.difficultyConfig.zerosConst!=null) ){
+		if((this.latestBlock().block.index==(this.userConfig.blocksToUndermine-1))
+			&& (this.userConfig.zerosConstDifficulty!=null) ){
 
-			let pathZeros = '../data/zeros-test/'+this.difficultyConfig.zerosConst+'.json';
+			let pathZeros = '../data/zeros-test/'+this.userConfig.zerosConstDifficulty+'.json';
 			let currentZerosData = [];
 			if (fs.existsSync(pathZeros)){
 				currentZerosData =  JSON.parse(

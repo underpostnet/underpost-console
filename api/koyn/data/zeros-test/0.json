@@ -10,5 +10,9 @@
     {
         "avgTimeBlock": "0.06",
         "avgHashRate": "223.12"
+    },
+    {
+        "avgTimeBlock": "0.01",
+        "avgHashRate": "1510.64"
     }
 ]

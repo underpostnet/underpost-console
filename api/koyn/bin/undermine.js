@@ -8,16 +8,20 @@
 import { BlockChain } from "../class/blockChain.js";
 
 new BlockChain({
+  generation: '0',
+  version: '0.0.0',
+  userConfig: {
+    blocksToUndermine: 14,
+    zerosConstDifficulty: null
+  },
   rewardConfig: {
-    intervalChangeEraBlock: 1, /* 1 - 210000 */
-    totalEra: 32,
-    totalBlocks: 34
+    intervalChangeEraBlock: 1, /* 1 - 210000 - 300000 */
+    totalEra: 12
   },
   difficultyConfig: {
     hashRateSeconds: 6000,
     intervalSecondsTime: 10,
-    intervalCalculateDifficulty: 10,
-    zerosConst: null
+    intervalCalculateDifficulty: 10
   }
 }).mainProcess({
   rewardAddress: "APOJA7S8ASNA9S8WE",
