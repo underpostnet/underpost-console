@@ -10,13 +10,17 @@ import { BlockChain } from "../class/blockChain.js";
 new BlockChain({
   generation: '0',
   version: '0.0.0',
+  hashGeneration: null,
+  previousHashGeneration: null,
   userConfig: {
-    blocksToUndermine: 14,
+    blocksToUndermine: null,
     zerosConstDifficulty: null
   },
   rewardConfig: {
     intervalChangeEraBlock: 1, /* 1 - 210000 - 300000 */
-    totalEra: 12
+    totalEra: 9,
+    hashesPerCurrency: 10,
+    upTruncFactor: 15
   },
   difficultyConfig: {
     hashRateSeconds: 6000,

@@ -25,13 +25,18 @@ export class BlockChain {
 				reward: [],
 				blocks: [],
 				rewardPerBlock: [],
-				rewardPerBlockInt: [],
+				rewardCurrencyPerBlock: [],
 				sumBlocks: 0,
 				sumReward: 0
 			},
 			obj.rewardConfig
 		);
 		this.setRewardConfig();
+
+		obj.userConfig.blocksToUndermine == null ?
+		this.userConfig.blocksToUndermine =
+		( obj.rewardConfig.totalEra + 2 )
+		: null;
 
 	}
 
@@ -53,15 +58,18 @@ export class BlockChain {
 				/	this.rewardConfig.intervalChangeEraBlock
 			);
 
-			this.rewardConfig.rewardPerBlockInt.push(
-				Math.trunc((this.rewardConfig.reward[
-					(new Util().l(this.rewardConfig.reward)-1)
-				]
-				/	this.rewardConfig.intervalChangeEraBlock)*100)
+			this.rewardConfig.rewardCurrencyPerBlock.push(
+
+			Math.trunc(
+
+				(this.rewardConfig.reward[(new Util().l(this.rewardConfig.reward)-1)]
+
+				/	this.rewardConfig.intervalChangeEraBlock)*this.rewardConfig.upTruncFactor)
+
 			);
 
 			this.rewardConfig.sumBlocks += this.rewardConfig.intervalChangeEraBlock;
-			this.rewardConfig.sumReward += this.rewardConfig.reward[
+			this.rewardConfig.sumReward += this.rewardConfig.rewardCurrencyPerBlock[
 				(new Util().l(this.rewardConfig.reward)-1)
 			];
 			this.rewardConfig.blocks.push(this.rewardConfig.sumBlocks);
@@ -95,7 +103,8 @@ export class BlockChain {
 						difficulty: diff.difficulty
 					},
 					date: (+ new Date()),
-					version: this.version
+					version: this.version,
+					generation: this.generation
         }
       default:
         return {
@@ -108,7 +117,8 @@ export class BlockChain {
 						difficulty: diff.difficulty
 					},
 					date: (+ new Date()),
-					version: this.version
+					version: this.version,
+					generation: this.generation
         }
     }
   }
@@ -116,8 +126,7 @@ export class BlockChain {
 	genesisBlockChainConfig(){
 		return {
 			difficultyConfig: this.difficultyConfig,
-			rewardConfig: this.rewardConfig,
-			generation: this.generation
+			rewardConfig: this.rewardConfig
 		}
 	}
 
@@ -126,21 +135,32 @@ export class BlockChain {
 	}
 
   calculateReward(){
+		const genereteHashsKoyn = rewardCurrency => {
+			// esta funcion disminuye en factor de 30 el rendimiento
+			let reward = [];
+			for(let iCurrency of new Util().range(1, rewardCurrency)){
+				let hashsKoyn = [];
+				for(let iHash in new Util().range(1, this.rewardConfig.hashesPerCurrency)){
+					hashsKoyn.push(new Util().getHash());
+				}
+				reward.push(hashsKoyn);
+			}
+			return {
+				totalValue: new Util().l(reward),
+				hashs: reward
+			};
+		};
 		switch (new Util().l(this.chain)) {
 			case 0:
-				return this.rewardConfig.rewardPerBlock[0];
+				return genereteHashsKoyn(this.rewardConfig.rewardCurrencyPerBlock[0]);
 			default:
 				let indexBlock = this.latestBlock().block.index+1;
-				for(let i of new Util().range(0, this.rewardConfig.totalEra)){
-					switch (i) {
-						case 0:
-							if((0<indexBlock)&&(indexBlock<this.rewardConfig.blocks[0])){
-								return this.rewardConfig.rewardPerBlock[0]
-							}
-						default:
-							if((this.rewardConfig.blocks[i-1]<=indexBlock)&&(indexBlock<this.rewardConfig.blocks[i])){
-								return this.rewardConfig.rewardPerBlock[i];
-							}
+				for(let i of new Util().range(1, this.rewardConfig.totalEra)){
+					if((this.rewardConfig.blocks[i-1]<=indexBlock)&&(indexBlock<this.rewardConfig.blocks[i])){
+						// return this.rewardConfig.rewardPerBlock[i];
+						console.log('test ->');
+						console.log(this.rewardConfig.rewardCurrencyPerBlock[i]);
+						return genereteHashsKoyn(this.rewardConfig.rewardCurrencyPerBlock[i]);
 					}
 				}
 		}
@@ -333,7 +353,8 @@ export class BlockChain {
 	calculateCurrentRewardDelivered(){
 		let currentReward = 0;
 		for(let block of this.chain){
-			currentReward += block.block.reward;
+			block.block.reward ?
+			currentReward += block.block.reward.totalValue : null;
 		}
 		console.log(colors.cyan('current-reward-delivered:'+currentReward));
 	}
