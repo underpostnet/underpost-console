@@ -170,9 +170,6 @@ export class BlockChain {
 				let indexBlock = this.latestBlock().block.index+1;
 				for(let i of new Util().range(1, this.rewardConfig.totalEra)){
 					if((this.rewardConfig.blocks[i-1]<=indexBlock)&&(indexBlock<this.rewardConfig.blocks[i])){
-						// return this.rewardConfig.rewardPerBlock[i];
-						console.log('test ->');
-						console.log(this.rewardConfig.rewardCurrencyPerBlock[i]);
 						return genereteHashsKoyn(this.rewardConfig.rewardCurrencyPerBlock[i]);
 					}
 				}
