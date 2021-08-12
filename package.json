@@ -4,9 +4,10 @@
   "version": "1.1.0",
   "main": "./init.js",
   "scripts": {
-    "prod": "node init.js p",
-    "start": "nodemon init.js p",
-    "dev": "nodemon init.js d"
+    "prod": "node app.js p",
+    "start": "nodemon app.js p",
+    "dev": "nodemon app.js d",
+    "console": "node console.mjs d"
   },
   "repository": {
     "type": "git",
