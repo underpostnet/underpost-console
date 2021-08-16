@@ -1,9 +1,4 @@
 {
-  "watch": [
-    "./",
-    "c:/dd/global_data/json/underpostv3/",
-    "c:/dd/deploy_area/client/",
-    "c:/dd/underpost.net/src/node/src"
-  ],
+  "watch": ["./"],
     "ext": "js,css,mjs"
 }

@@ -1,19 +1,17 @@
+
 //------------------------------------------------------------------------------
 //
-//      Ywork NodeJS Express Server
+//      UNDERpost.net NetworK System
 //
 //      Developed By Francisco Verdugo <fcoverdugoa@underpost.net>
-//      https://github.com/underpostnet/express-ywork
+//      https://underpost.net/
 //
 //------------------------------------------------------------------------------
-
-// http://localhost:91/
-// https://www.w3schools.com/icons/fontawesome5_intro.asp
-// https://fontawesome.com/v5.15/icons/search
 
 let fs = require('fs');
 var charset = 'utf8';
-var data = JSON.parse(fs.readFileSync('C:/dd/global_data/json/underpostv3/underpost.json', charset));
+var data = JSON.parse(fs.readFileSync('{{path}}/data/underpost.json', charset));
+// var data = JSON.parse(fs.readFileSync('{{path}}/data/underpost.json', charset));
 var microdata = JSON.parse(fs.readFileSync(data.dataPath+'microdata.json', charset));
 eval(fs.readFileSync(data.underpostClientPath+'util.js', charset));
 var dev = process.argv.slice(2)[0]=='d' ? true: false;
@@ -37,7 +35,7 @@ for(let mod of ServerMods){
 
 app.listen(data.http_port, () => {
   console.log('argv', process.argv);
-  log('progress', 'yWork v1.5');
+  log('progress', 'underpost network v1.5');
   log('info', 'set server token -> '+serverToken);
   let mode = dev ? 'DEV MODE' : 'PROD MODE';
   log('warn','HTTP '+mode+' SERVER ONLINE -> PORT:'+data.http_port);

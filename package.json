@@ -4,10 +4,10 @@
   "version": "1.1.0",
   "main": "./init.js",
   "scripts": {
-    "prod": "node app.js p",
-    "start": "nodemon app.js p",
+    "start": "node app.js p",
     "dev": "nodemon app.js d",
-    "console": "node console.mjs d"
+    "console": "node console.mjs",
+    "update": "node update.js"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "crypto-js": "latest",
     "file-get-contents": "latest",
     "ws": "latest",
-    "node-fetch": "latest"
+    "node-fetch": "latest",
+    "shelljs": "latest"
   }
 }
