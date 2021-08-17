@@ -10,7 +10,7 @@
 
 let fs = require('fs');
 var charset = 'utf8';
-var data = JSON.parse(fs.readFileSync('C:/dd/underpost.net/src/node/apps/underpost/data/underpost.json', charset));
+var data = JSON.parse(fs.readFileSync('{{path}}/data/underpost.json', charset));
 // var data = JSON.parse(fs.readFileSync('{{path}}/data/underpost.json', charset));
 var microdata = JSON.parse(fs.readFileSync(data.dataPath+'microdata.json', charset));
 eval(fs.readFileSync(data.underpostClientPath+'util.js', charset));
