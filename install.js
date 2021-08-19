@@ -48,6 +48,7 @@ shell.exec('git clone https://github.com/underpostnet/underpost-data-template');
 var consoleContent =
 fs.readFileSync(dir('/console.mjs'), charset).replace('{{path}}', dir());
 consoleContent = consoleContent.replace('{{path}}', dir());
+consoleContent = consoleContent.replace('{{path}}', dir());
 
 fs.writeFileSync(
 				 dir('/console.mjs'),

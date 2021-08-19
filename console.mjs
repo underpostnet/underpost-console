@@ -3,13 +3,63 @@
 
 import { Config } from
 "file://{{path}}/underpost/underpost.net/src/node/src/network/api/config/class/config.js";
+import { Util } from
+"file://{{path}}/underpost/underpost.net/src/node/src/util/class/util.js";
+let dir = "{{path}}";
 
-let dataPath = "{{path}}/data/underpost.json"
-new Config().mainProcess({
+import fs from "fs";
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+
+let dataPath = dir+"/data/underpost.json";
+var charset = 'utf8';
+
+var data = JSON.parse(fs.readFileSync(dataPath));
+console.log(data);
+
+
+console.log(new Util().getKeys(data));
+
+
+/* new Config().mainProcess({
   dataPathTemplate: dataPath,
   dataPathSave: dataPath
-});
+}); */
 
-// "file://{{path}}/underpost/underpost.net/src/node/src/network/api/config/class/config.js";
 
-// let dataPath = "{{path}}/data/underpost.json"
+
+
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+/*
+
+import { Config } from
+"file://{{path}}/underpost/underpost.net/src/node/src/network/api/config/class/config.js";
+import { Util } from
+"file://{{path}}/underpost/underpost.net/src/node/src/util/class/util.js";
+let dir = "{{path}}";
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------

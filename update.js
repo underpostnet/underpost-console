@@ -25,6 +25,11 @@ const dir = path => {
 	}
 };
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+eval(fs.readFileSync(dir('/underpost/underpost-library/util.js'), charset));
+
 console.log(colors.yellow('update underpost.net'));
 
 const underpostPaths =
@@ -43,6 +48,13 @@ for(let path of underpostPaths){
 }
 
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+let templateData = JSON.parse(fs.readFileSync(dir('/underpost/underpost-data-template/underpost.json')));
+let mainData = JSON.parse(fs.readFileSync(dir('/data/underpost.json')));
+mainData = fusionObj([templateData, mainData]);
+fs.writeFileSync(dir('/data/underpost.json'), jsonSave(mainData), charset);
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
