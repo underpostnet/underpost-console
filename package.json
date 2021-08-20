@@ -4,10 +4,8 @@
   "version": "1.1.0",
   "main": "./init.js",
   "scripts": {
-    "start": "node app.js p",
-    "dev": "nodemon app.js d",
-    "console": "node console.mjs",
-    "update": "node update.js"
+    "start": "node src/underpost-manager",
+    "install": "node underpost"
   },
   "repository": {
     "type": "git",
