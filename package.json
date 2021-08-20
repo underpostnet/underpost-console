@@ -1,11 +1,13 @@
 {
   "name": "underpostNetwork",
   "description": "underpost.net network",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "main": "./init.js",
   "scripts": {
-    "start": "node src/underpost-manager",
-    "install": "node underpost"
+    "start": "node app.js p",
+    "dev": "nodemon app.js d",
+    "console": "node src/underpost-manager",
+    "update": "node underpost"
   },
   "repository": {
     "type": "git",
