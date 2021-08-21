@@ -39,7 +39,7 @@ class UnderPost {
 
     this.underpostPaths = underpostPaths;
 
-    console.log(colors.yellow(' > UNDERpost.net Manager v1.1.0'));
+    console.log(colors.yellow(' > UNDERpost.net Manager Update v1.1.0'));
 
   	this.init();
 

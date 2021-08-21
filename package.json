@@ -7,7 +7,7 @@
     "start": "node app.js p",
     "dev": "nodemon app.js d",
     "console": "node src/underpost-manager",
-    "update": "node underpost"
+    "underpost": "node underpost"
   },
   "repository": {
     "type": "git",

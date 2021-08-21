@@ -16,25 +16,22 @@ https://underpost.net
 `npm install`
 
 
-`node install`
+`npm run underpost`
 
 
-`node update`
+- console system manager:
 
 
-- config:
+`npm run console`
 
 
-`node console.mjs`
-
-
-- app dev mode init:
+- app dev mode:
 
 
 `npm run dev`
 
 
-- app production mode init:
+- app production mode:
 
 
 `npm run start`
