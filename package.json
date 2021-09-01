@@ -1,7 +1,7 @@
 {
   "name": "underpostNetwork",
   "description": "underpost.net network",
-  "version": "1.2.0",
+  "version": "1.0.0",
   "main": "./init.js",
   "scripts": {
     "start": "node app.js p",
