@@ -13,6 +13,8 @@ const colors = require('colors/safe.js');
 const shell = require('shelljs');
 const path = require('path');
 
+// https://www.npmjs.com/package/shelljs
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 
@@ -47,22 +49,20 @@ class UnderPost {
 
   async setUp(){
 
-		console.log(colors.yellow(' > init setUp'));
-
     shell.cd('underpost');
-    shell.exec('git clone https://github.com/underpostnet/underpost-library');
-    shell.exec('git clone https://github.com/underpostnet/underpost.net');
-    shell.exec('git clone https://github.com/underpostnet/underpost-data-template');
+		for(let path of this.underpostPaths){
+			console.log(colors.yellow(' > install '+path));
+      shell.exec('git clone https://github.com/underpostnet/'+path);
+    }
 
   };
 
   async upDate(){
 
-		console.log(colors.yellow(' > init upDate'));
-
     shell.cd('underpost');
     for(let path of this.underpostPaths){
       shell.cd(path);
+			console.log(colors.yellow(' > update '+path));
       shell.exec('git pull origin master');
       shell.cd('..');
     }
@@ -70,6 +70,15 @@ class UnderPost {
   }
 
 	async init(){
+
+		if (!shell.which('git')) {
+		  // shell.echo('Sorry, this script requires git');
+			console.log(colors.red('error > this process requires git'));
+		  // shell.exit(1);
+			this.exit();
+		}
+
+		shell.exec('git pull origin master');
 
 		! fs.existsSync(dir('/underpost')) ?
 		await this.setUp()  :
@@ -85,7 +94,22 @@ class UnderPost {
 		  dir('src/underpost-manager.js'),
 		  new_um
 		);
+		
+		shell.cd('..');
+		console.log(colors.yellow(' > npm update'));
+		await shell.exec('node-update.bat');
+		console.log(colors.yellow(' > exec main console'));
+		shell.exec('start cmd.exe /K "node src/underpost-manager"');
+		// shell.exec('start git-bash.exe /K "node src/underpost-manager"');
 
+	}
+
+	exit(){
+		try {
+			process.exit();
+		}catch(err){
+			// console.log(err);
+		}
 	}
 
 }
