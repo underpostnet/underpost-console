@@ -49,6 +49,7 @@ class UnderPost {
 
   async setUp(){
 
+		fs.mkdirSync(dir('/underpost'));
     shell.cd('underpost');
 		for(let path of this.underpostPaths){
 			console.log(colors.yellow(' > install '+path));
