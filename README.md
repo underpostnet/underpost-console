@@ -16,10 +16,16 @@ https://underpost.net
 `npm install`
 
 
-- updater and console system manager:
+- updater:
 
 
 `node underpost`
+
+
+- console system manager
+
+
+`node src/underpost-manager` or `manager`
 
 
 - app dev mode:

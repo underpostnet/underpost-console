@@ -95,13 +95,15 @@ class UnderPost {
 		  dir('src/underpost-manager.js'),
 		  new_um
 		);
-		
+
 		shell.cd('..');
 		console.log(colors.yellow(' > npm update'));
 		await shell.exec('node-update.bat');
-		console.log(colors.yellow(' > exec main console'));
-		shell.exec('start cmd.exe /K "node src/underpost-manager"');
+		// console.log(colors.yellow(' > exec main console'));
+		// shell.exec('start cmd.exe /K "node src/underpost-manager"');
 		// shell.exec('start git-bash.exe /K "node src/underpost-manager"');
+
+		console.log(colors.cyan(' > end update process'));
 
 	}
 
