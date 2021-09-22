@@ -33,6 +33,7 @@
     "ws": "latest",
     "node-fetch": "latest",
     "shelljs": "latest",
-    "mime": "latest"
+    "mime": "latest",
+    "read": "latest"
   }
 }
