@@ -4,8 +4,7 @@
   "version": "1.0.0",
   "main": "./init.js",
   "scripts": {
-    "start": "node app.js p",
-    "dev": "nodemon app.js d"
+    "start": "nodemon compiler"
   },
   "repository": {
     "type": "git",
@@ -35,6 +34,7 @@
     "shelljs": "latest",
     "mime": "latest",
     "read": "latest",
-    "clipboardy": "latest"
+    "clipboardy": "latest",
+    "nodemailer": "latest"
   }
 }

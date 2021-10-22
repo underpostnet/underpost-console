@@ -31,10 +31,10 @@ https://underpost.net
 - app dev mode:
 
 
-`npm run dev`
+`npm start d`
 
 
 - app production mode:
 
 
-`npm run start`
+`npm start`

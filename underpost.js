@@ -91,7 +91,7 @@ class UnderPost {
 		let new_um =
 		content_um[0]+`/* fix */'`+dir()+`'/* fix */`+content_um[2];
 
-		await fs.writeFileSync(
+		fs.writeFileSync(
 		  dir('src/underpost-manager.js'),
 		  new_um
 		);
