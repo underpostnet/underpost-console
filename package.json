@@ -36,6 +36,7 @@
     "read": "latest",
     "clipboardy": "latest",
     "nodemailer": "latest",
-    "file-sizeof": "latest"
+    "file-sizeof": "latest",
+    "mp3-duration": "latest"
   }
 }
