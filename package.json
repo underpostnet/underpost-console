@@ -35,6 +35,7 @@
     "mime": "latest",
     "read": "latest",
     "clipboardy": "latest",
-    "nodemailer": "latest"
+    "nodemailer": "latest",
+    "file-sizeof": "latest"
   }
 }
