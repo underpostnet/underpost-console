@@ -15,7 +15,7 @@ import { UnderPostManager } from
 "../underpost/underpost.net/src/node/src/network/api/underpost-manager/class/UnderPostManager.js";
 
 new UnderPostManager(
-/* fix */'path'/* fix */
+/* fix */'C:/dd/underpost.net/src/node/apps/underpost'/* fix */
 ).init();
 
 
