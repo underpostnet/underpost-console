@@ -24,7 +24,7 @@ fs.mkdirSync(yWorkPath+'/temp') : null;
 //------------------------------------------------------------------------------
 
 var requireModules = JSON.parse(
- fs.readFileSync('./data/import-class.json', charset)
+ fs.readFileSync('./underpost/underpost-data-template/import-class.json', charset)
 );
 var classContent = '';
 

@@ -81,7 +81,7 @@ const execApp = async () => {
   console.log(colors.cyan(" execApp > new start main proccess"));
 
   if(!dev){
-    shell.exec('npx kill-port '+data.http_port);
+    shell.exec('npx kill-port '+data.network.node.http_port);
   }
   // await shell.exec('npx kill-port '+data.ws_port);
   // await shell.exec('npx kill-port '+data.peer_port);

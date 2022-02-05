@@ -108,11 +108,7 @@ class UnderPost {
 	}
 
 	exit(){
-		try {
-			process.exit();
-		}catch(err){
-			// console.log(err);
-		}
+		process.exit();
 	}
 
 }
