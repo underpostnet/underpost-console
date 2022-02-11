@@ -1,20 +1,20 @@
 {
-  "name": "underpostNetwork",
-  "description": "underpost.net network",
-  "version": "1.0.0",
-  "main": "./init.js",
+  "name": "UnderPostConsole",
+  "description": "underpost console manager system",
+  "version": "1.5.0",
+  "main": "./src/console.js",
   "scripts": {
-    "start": "nodemon compiler"
+    "start": null
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/underpostnet/underpost-network"
+    "url": "https://github.com/underpostnet/underpost-console"
   },
   "keywords": [
     "network",
     "underpost.net",
     "game",
-    "cards",
+    "cyberia",
     "koyn",
     "blockchain"
   ],

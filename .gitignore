@@ -1,6 +1,3 @@
 /node_modules
 /package-lock.json
-/underpost
-/data
-/PRIVATE.md
-/temp
+/src/data

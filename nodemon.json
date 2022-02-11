@@ -1,8 +1,8 @@
 {
   "watch": [
-    "./underpost"
+    "./src"
   ],
-  "ext": "js,css",
+  "ext": "js",
   "delay": "0",
-  "ignore": [ "./temp" ]
+  "ignore": [ ]
 }

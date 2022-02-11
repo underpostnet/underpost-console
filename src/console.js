@@ -2,7 +2,7 @@
 
 //------------------------------------------------------------------------------
 //
-//      UNDERpost.net NetworK System
+//      UNDERpost.net Manager Console
 //
 //      Developed By Francisco Verdugo <fcoverdugoa@underpost.net>
 //      https://underpost.net/
@@ -12,11 +12,9 @@
 
 
 import { UnderPostManager } from
-"../underpost/underpost.net/src/node/src/network/api/underpost-manager/class/UnderPostManager.js";
+'../../underpost.net/underpost-modules-v1/underpost-manager/class/UnderPostManager.js';
 
-new UnderPostManager(
-/* fix */'path'/* fix */
-).init();
+new UnderPostManager().init();
 
 
 

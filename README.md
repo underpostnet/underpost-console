@@ -1,4 +1,4 @@
-# UNDERpost.net | Network System
+# UNDERpost.net | Manager Console
 
 
 ![underpost.net](https://underpost.net/underpost-social.jpg)
@@ -16,25 +16,7 @@ https://underpost.net
 `npm install`
 
 
-- updater:
+- run console:
 
 
-`node underpost`
-
-
-- console system manager
-
-
-`node src/underpost-manager` or `manager`
-
-
-- app dev mode:
-
-
-`npm start d`
-
-
-- app production mode:
-
-
-`npm start`
+`node src/console`
