@@ -10,19 +10,19 @@ https://underpost.net
 ## Usage:
 
 
-- *1* install:
+- install:
 
 
 `npm install`
 
 
-- *2* update:
+- update:
 
 
 `node update`
 
 
-- *3* run console:
+- run console:
 
 
 `node src/console`
