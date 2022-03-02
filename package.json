@@ -37,6 +37,7 @@
     "clipboardy": "2.3.0",
     "nodemailer": "latest",
     "file-sizeof": "latest",
-    "mp3-duration": "latest"
+    "mp3-duration": "latest",
+    "ajv": "latest"
   }
 }
