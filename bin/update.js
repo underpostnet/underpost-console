@@ -31,11 +31,21 @@ const charset = 'utf8';
 
 const getProjectName = dep => dep.split('/').pop();
 
-const writeModules = async () => {
-  await copyDir('../underpost.net/underpost-modules-v1', './underpost_modules/underpost-modules-v1');
-  await copyDir('../underpost.net/underpost-modules-v2', './underpost_modules/underpost-modules-v2');
-  await copyDir('../underpost-data-template', './underpost_modules/underpost-data-template');
-  shell.exec('start cmd /k npm start');
+const writeModules = async projectName => {
+  switch (projectName) {
+    case 'underpost.net':
+      console.log(colors.yellow(' build -> underpost.net \n'));
+      await copyDir('../underpost.net/underpost-modules-v1', './underpost_modules/underpost-modules-v1');
+      await copyDir('../underpost.net/underpost-modules-v2', './underpost_modules/underpost-modules-v2');
+      break;
+    case 'underpost-data-template':
+      console.log(colors.yellow(' build -> underpost-data-template \n'));
+      await copyDir('../underpost-data-template', './underpost_modules/underpost-data-template');
+      break;
+    default:
+      console.log(colors.yellow(' build -> invalid dependency \n'));
+  }
+  // shell.exec('start cmd /k npm start');
   // /k or /c for command
 };
 
@@ -44,7 +54,7 @@ const install = async dep => {
   shell.cd('..');
   shell.exec('git clone '+dep);
   shell.cd('underpost-console');
-  await writeModules();
+  await writeModules(getProjectName(dep));
 };
 const update = async dep => {
   console.log(colors.yellow(' update -> '+getProjectName(dep)));
@@ -53,7 +63,7 @@ const update = async dep => {
   shell.exec('git pull origin master');
   shell.cd('..');
   shell.cd('underpost-console');
-  await writeModules();
+  await writeModules(getProjectName(dep));
 };
 
 ! _fs.existsSync('./underpost_modules') ?
