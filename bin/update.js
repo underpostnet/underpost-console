@@ -34,6 +34,7 @@ const getProjectName = dep => dep.split('/').pop();
 const writeModules = async () => {
   await copyDir('../underpost.net/underpost-modules-v1', './underpost_modules/underpost-modules-v1');
   await copyDir('../underpost.net/underpost-modules-v2', './underpost_modules/underpost-modules-v2');
+  await copyDir('../underpost-data-template', './underpost_modules/underpost-data-template');
   shell.exec('start cmd /k npm start');
   // /k or /c for command
 };
