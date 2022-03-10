@@ -4,7 +4,8 @@
   "version": "1.5.0",
   "main": "./src/console.js",
   "scripts": {
-    "start": null
+    "start": "node src/console",
+    "update": "node bin/update"
   },
   "repository": {
     "type": "git",

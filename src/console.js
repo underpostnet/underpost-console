@@ -12,7 +12,7 @@
 
 
 import { UnderPostManager } from
-'../underpost-modules-v1/underpost-manager/class/UnderPostManager.js';
+'../underpost_modules/underpost-modules-v1/underpost-manager/class/UnderPostManager.js';
 
 new UnderPostManager().init();
 

@@ -32,8 +32,10 @@ const charset = 'utf8';
 const getProjectName = dep => dep.split('/').pop();
 
 const writeModules = async () => {
-  await copyDir('../underpost.net/underpost-modules-v1', './underpost-modules-v1');
-  await copyDir('../underpost.net/underpost-modules-v2', './underpost-modules-v2');
+  await copyDir('../underpost.net/underpost-modules-v1', './underpost_modules/underpost-modules-v1');
+  await copyDir('../underpost.net/underpost-modules-v2', './underpost_modules/underpost-modules-v2');
+  shell.exec('start cmd /k npm start');
+  // /k or /c for command
 };
 
 const install = async dep => {
@@ -52,6 +54,9 @@ const update = async dep => {
   shell.cd('underpost-console');
   await writeModules();
 };
+
+! _fs.existsSync('./underpost_modules') ?
+_fs.mkdirSync('./underpost_modules') : null;
 
 [
   'https://github.com/underpostnet/underpost.net',
