@@ -19,10 +19,10 @@ https://underpost.net
 - update:
 
 
-`node update`
+`npm run update`
 
 
 - run console:
 
 
-`node src/console`
+`npm start`
