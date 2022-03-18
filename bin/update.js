@@ -28,6 +28,7 @@ async function copyDir(src, dest) {
 
 const colors = require('colors/safe.js');
 const charset = 'utf8';
+const folderConsole = 'underpost-console';
 
 const getProjectName = dep => dep.split('/').pop();
 
@@ -41,6 +42,7 @@ const writeModules = async projectName => {
     case 'underpost-data-template':
       console.log(colors.yellow(' build -> underpost-data-template \n'));
       await copyDir('../underpost-data-template', './underpost_modules/underpost-data-template');
+      // eliminar .git de template en underpost_modules
       break;
     default:
       console.log(colors.yellow(' build -> invalid dependency \n'));
@@ -53,7 +55,7 @@ const install = async dep => {
   console.log(colors.yellow(' install -> '+getProjectName(dep)));
   shell.cd('..');
   shell.exec('git clone '+dep);
-  shell.cd('underpost-console');
+  shell.cd(folderConsole);
   await writeModules(getProjectName(dep));
 };
 const update = async dep => {
@@ -62,7 +64,7 @@ const update = async dep => {
   shell.cd(getProjectName(dep));
   shell.exec('git pull origin master');
   shell.cd('..');
-  shell.cd('underpost-console');
+  shell.cd(folderConsole);
   await writeModules(getProjectName(dep));
 };
 
